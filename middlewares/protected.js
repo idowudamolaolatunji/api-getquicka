@@ -1,0 +1,55 @@
+const { promisify } = require("util");
+const jwt = require("jsonwebtoken");
+const User = require("../models/userModel");
+
+//////////////////////////////////////////////
+//// PROTECTED USER MIDDLEWARE  ////
+//////////////////////////////////////////////
+
+exports.authProtected = async function (req, res, next) {
+	try {
+		// CHECK TOKEN AND GET TOKEN
+		let token = req.headers.authorization && req.headers?.authorization?.startsWith("Bearer") ? req.headers.authorization?.split(" ")[1] : req.cookie.jwt;
+
+		if (!token) {
+			return res.status(401).json({
+				message: "You are not logged in! Please log in to get access.",
+			});
+		}
+
+		// VERIFY THE TOKEN
+		const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET_TOKEN);
+		req.user = {
+			_id: decoded.id,
+		};
+
+		// CHECK IF THE USER EXIST
+		const currentUser = await User.findById(decoded.id);
+		if (!currentUser || !currentUser.isActive) {
+			return res.status(401).json({
+				message: "The user belonging to this token does not exist or is inactive.",
+			});
+		}
+
+		// AT THIS POINT GRANT ACCESS TO PROTECTED ROUTE
+		req.user = currentUser;
+		res.locals.user = currentUser;
+
+		return next();
+	} catch (err) {
+		return res.status(401).json({
+			status: "fail",
+			message: err.message || "You are unauthorised",
+		});
+	}
+};
+
+
+exports.isRestricted = async (role) => {
+	return async (req, res, next) => {
+		if (!req.user || req.user.role !== role) {
+			return res.status(403).json({ message: "Access denied." });
+		}
+		return next();
+	};
+};
