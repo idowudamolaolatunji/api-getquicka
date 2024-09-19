@@ -10,7 +10,7 @@ const { asyncWrapper } = require('../utils/handlers');
 exports.createStoreCategory = refactory.createOne(Category, 'category');
 exports.uploadCategoryImage = refactory.uploadOneImage(Category, 'category')
 
-exports.getStoreCategories = refactory.getAll(Category, 'categories');
+exports.getStoreCategories = refactory.getAll(Category, 'categories', {});
 exports.updateCategory = refactory.updateOne(Category, 'category');
 exports.deleteCategory = refactory.deleteOne(Category, 'category');
 
@@ -27,7 +27,7 @@ exports.uploadLogoImage = refactory.uploadOneImage(Store, 'logo')
 exports.uploadBannerImage = refactory.uploadOneImage(Store, 'banner')
 
 
-exports.getStores = refactory.getAll(Store, 'stores');
+exports.getStores = refactory.getAll(Store, 'stores', {});
 exports.getStore = refactory.getOne(Store, 'store');
 
 

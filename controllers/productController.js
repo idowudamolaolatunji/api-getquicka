@@ -14,7 +14,7 @@ exports.createProductCollection = refactory.createOneForStore(ProductCollection,
 exports.uploadProductCollectionImage = refactory.uploadOneImage(ProductCollection, 'collection');
 
 exports.getAllProductCollections = refactory.getAll(ProductCollection, 'collections', {
-    limit: 50, sort: {name: -1}
+    limitTO: 50, sortBy: {name: -1}
 });
 
 exports.updateProductCollection = refactory.updateOne(ProductCollection, 'collection');
@@ -28,7 +28,7 @@ exports.deleteProductCollection = refactory.deleteOne(ProductCollection, 'collec
 //////////////////////////////////////////////
 exports.createProduct = refactory.createOneForStore(Product, 'product');
 
-exports.getAllProducts = refactory.getAll(Product, 'products');
+exports.getAllProducts = refactory.getAll(Product, 'products', {});
 exports.getOneProduct = refactory.getOne(Product, 'product');
 
 exports.uploadProductImages = asyncWrapper(async function(req, res) {

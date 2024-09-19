@@ -31,7 +31,7 @@ exports.createShippingMethod = asyncWrapper(async function(req, res) {
 });
 
 
-exports.getAllShippingMethod = refactory.getAll(ShippingMethod, 'shippingMethods');
+exports.getAllShippingMethod = refactory.getAll(ShippingMethod, 'shippingMethods', {});
 exports.getOneShippingMethod = refactory.getOne(ShippingMethod, 'shipping');
 
 

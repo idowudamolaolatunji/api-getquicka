@@ -6,6 +6,8 @@ const cookieParser = require('cookie-parser');
 
 const app = express();
 const userRouter = require('./routes/userRoute');
+const storeRouter = require('./routes/storeRoute');
+const productRouter = require('./routes/productRoute');
 
 //////////////////////////////////////////////
 //// MIDDLEWARES ////
@@ -46,6 +48,8 @@ app.use(function (_, _, next) {
 //// MOUNTING ROUTES ////
 //////////////////////////////////////////////
 app.use('/api/users', userRouter);
+app.use('/api/stores', storeRouter);
+app.use('/api/products', productRouter);
 
 
 module.exports = app;
