@@ -18,15 +18,13 @@ const productSchema = new mongoose.Schema({
     },
     productId: String,
     images: [String],
-    description: {
-        type: String,
-        required: true,
-    },
+    shortDescription: String,
+    description: String,
     price: {
         type: Number,
         required: true,
     },
-    slashPrice: Number,
+    // slashPrice: Number,
     collection: String,
     details: [{
         size: String,
@@ -37,6 +35,10 @@ const productSchema = new mongoose.Schema({
         type: Number,
         default: 1
     },
+    isSoldOut: {
+        type: Boolean,
+        default: false
+    }
 }, {
     timestamps: true,
 });

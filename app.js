@@ -1,9 +1,11 @@
+const path = require('path')
 const express = require('express');
 const cors = require('cors');
 const morgan = require('morgan');
 const cookieParser = require('cookie-parser');
 
 const app = express();
+const userRouter = require('./routes/userRoute');
 
 //////////////////////////////////////////////
 //// MIDDLEWARES ////
@@ -43,8 +45,7 @@ app.use(function (_, _, next) {
 //////////////////////////////////////////////
 //// MOUNTING ROUTES ////
 //////////////////////////////////////////////
+app.use('/api/users', userRouter);
 
 
-
-
-export default app;
+module.exports = app;

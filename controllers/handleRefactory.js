@@ -1,10 +1,11 @@
+const Store = require("../models/storeModel");
 const { asyncWrapper } = require("../utils/handlers");
 const { capitalizeFirstLetter } = require("../utils/helpers");
 
 
 
 exports.getAll = function(Model, title, { limitTO=25, sortBy={createdAt: -1} }) {
-    asyncWrapper(async function(_, res) {
+    return asyncWrapper(async function(_, res) {
         const documents = await Model.find().limit(limitTO).sort(sortBy);
 
         if(!documents || documents?.length < 1) return res.json({ 
@@ -21,7 +22,7 @@ exports.getAll = function(Model, title, { limitTO=25, sortBy={createdAt: -1} }) 
 
 
 exports.createOne = function(Model, title) {
-    asyncWrapper(async function(req, res) {
+    return asyncWrapper(async function(req, res) {
         const document = await Model.create(req.body);
 
         res.status(200).json({
@@ -32,8 +33,23 @@ exports.createOne = function(Model, title) {
     })
 }
 
+exports.createOneForStore = function(Model, title) {
+    return asyncWrapper(async function(req, res) {
+        const store = await Store.findOne({ owner: req.user._id });
+        if(!store) return res.json({ message: 'You don\'t have a store yet!' });
+
+        const document = await Model.create({ ...req.body, store: store._id });
+
+        res.status(200).json({
+            status: 'success',
+            message: `${capitalizeFirstLetter(title)} created successfully!`,
+            data: { [title]: document }
+        })
+    })
+}
+
 exports.uploadOneImage = function(Model, title) {
-    asyncWrapper(async function(req, res) {
+    return asyncWrapper(async function(req, res) {
         const { id } = req.params;
 
         const document = await Model.findById(id);
@@ -59,7 +75,7 @@ exports.uploadOneImage = function(Model, title) {
 
 
 exports.getOne = function(Model, title) {
-    asyncWrapper(async function(req, res) {
+    return asyncWrapper(async function(req, res) {
         const { id } = req.params;
         const document = await Model.findOne(id);
 
@@ -74,7 +90,7 @@ exports.getOne = function(Model, title) {
 
 
 exports.updateOne = function(Model, title) {
-    asyncWrapper(async function(req, res) {
+    return asyncWrapper(async function(req, res) {
         const { id } = req.params;
         
         const document = await Model.findByIdAndUpdate(id, req.body, {
@@ -92,7 +108,7 @@ exports.updateOne = function(Model, title) {
 
 
 exports.deleteOne = function(Model, title) {
-    asyncWrapper(async function(req, res) {
+    return asyncWrapper(async function(req, res) {
         const { id } = req.params;
 
         await Model.findByIdAndDelete(id);

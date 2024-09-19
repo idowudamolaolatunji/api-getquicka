@@ -107,3 +107,25 @@ exports.resizeSingleUserImage = async function (req, _, next) {
         next(err);
     }
 };
+
+//////////////////////////////////////////////////
+//// SHARP RESIZE COLLECTION / CATEGORY IMAGE ////
+//////////////////////////////////////////////////
+exports.resizeSingleGroupImage = async function (req, _, next) {
+    if(!req.file) return next();
+    const { id } = req.params;
+
+    try {
+        req.file.filename = `group-${id}-${Date.now()}.jpeg`;
+
+        await sharp(req.file.buffer)
+            .resize(350, 350)
+            .toFormat('jpeg')
+            .jpeg({ quality: 75 })
+            .toFile(`public/assets/groups/${req.file.filename}`);
+        next();
+
+    } catch(err) {
+        next(err);
+    }
+};

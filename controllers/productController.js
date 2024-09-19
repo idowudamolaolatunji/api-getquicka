@@ -10,26 +10,7 @@ const sharp = require('sharp');
 //////////////////////////////////////////////
 //// PRODUCT CATEGORY LOGIC  ////
 //////////////////////////////////////////////
-exports.createProductCollection = asyncWrapper(async function(req, res) {
-    const id = req.user._id;
-    const { name, description } = req.body;
-
-    const store = await Store.findOne({ owner: id });
-    if(!store) return res.json({ message: 'You don\'t have a store yet!' });
-
-    const newCollection = await ProductCollection.create({
-        store: store._id,
-        name, description,
-    });
-
-    res.status(200).json({
-        status: 'success',
-        message: `${capitalizeFirstLetter(newCollection.name)} collection created!`,
-        data: { collection: newCollection }
-    });
-});
-
-
+exports.createProductCollection = refactory.createOneForStore(ProductCollection, 'collection')
 exports.uploadProductCollectionImage = refactory.uploadOneImage(ProductCollection, 'collection');
 
 exports.getAllProductCollections = refactory.getAll(ProductCollection, 'collections', {
@@ -45,32 +26,10 @@ exports.deleteProductCollection = refactory.deleteOne(ProductCollection, 'collec
 //////////////////////////////////////////////
 //// PRODUCT LOGIC  ////
 //////////////////////////////////////////////
-exports.createProduct = asyncWrapper(async function(req, res) {
-    const id = req.user._id;
-    const { name, description, price, slashPrice, collection, details, stockAmount } = req.body;
+exports.createProduct = refactory.createOneForStore(Product, 'product');
 
-    const store = await Store.findOne({ owner: id });
-    if(!store) return res.json({ message: 'You don\'t have a store yet!' });
-
-    const newProduct = Product.create({
-        store: store._id,
-        name,
-        description,
-        price,
-        slashPrice,
-        collection,
-        details,
-        stockAmount
-    });
-
-
-    res.status(200).json({
-        status: 'success',
-        message: `Item created successfully!`,
-        data: { product: newProduct }
-    });
-});
-
+exports.getAllProducts = refactory.getAll(Product, 'products');
+exports.getOneProduct = refactory.getOne(Product, 'product');
 
 exports.uploadProductImages = asyncWrapper(async function(req, res) {
     const { id } = req.params;
@@ -103,9 +62,6 @@ exports.uploadProductImages = asyncWrapper(async function(req, res) {
         message: 'Image upload successful'
     });
 });
-
-exports.getAllProducts = refactory.getAll(Product, 'products');
-exports.getOneProduct = refactory.getOne(Product, 'product');
 
 exports.getProductByProductId = asyncWrapper(async function(req, res) {
     const { productId } = req.params;

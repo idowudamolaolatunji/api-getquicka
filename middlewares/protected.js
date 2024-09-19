@@ -6,7 +6,7 @@ const User = require("../models/userModel");
 //// PROTECTED USER MIDDLEWARE  ////
 //////////////////////////////////////////////
 
-exports.authProtected = async function (req, res, next) {
+exports.isAuthProtected = async function (req, res, next) {
 	try {
 		// CHECK TOKEN AND GET TOKEN
 		let token = req.headers.authorization && req.headers?.authorization?.startsWith("Bearer") ? req.headers.authorization?.split(" ")[1] : req.cookie.jwt;
@@ -45,9 +45,9 @@ exports.authProtected = async function (req, res, next) {
 };
 
 
-exports.isRestricted = async (role) => {
-	return async (req, res, next) => {
-		if (!req.user || req.user.role !== role) {
+exports.isRestricted = function(role=["admin"]) {
+	return function(req, res, next) {
+		if (!req.user || !role.includes(req.user.role)) {
 			return res.status(403).json({ message: "Access denied." });
 		}
 		return next();

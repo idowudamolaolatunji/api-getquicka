@@ -20,7 +20,7 @@ exports.deleteCategory = refactory.deleteOne(Category, 'category');
 //////////////////////////////////////////////
 
 exports.createStore = asyncWrapper(async function(req, res) {
-
+    
 })
 
 exports.uploadLogoImage = refactory.uploadOneImage(Store, 'logo')

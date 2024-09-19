@@ -12,8 +12,7 @@ const DBSTRING = process.env.DATABASE?.replace('<PASSWORD>', process.env.DATABAS
 
 async function connectDB() {
     try {
-        const con = await mongoose.connect(DBSTRING);
-        console.log(con);
+        await mongoose.connect(DBSTRING);
         console.log('Database connected successfully!');
 
     } catch(err) {

@@ -97,6 +97,7 @@ const storeSchema = new mongoose.Schema({
         default: true
     },
     maintenanceMessage: { type: String, default: 'We are not available right now' },
+    settings: {  },
     // MORE TO COME...
 }, {
     timestamps: true
