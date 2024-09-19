@@ -44,6 +44,12 @@ app.use(function (_, _, next) {
 });
 
 
+app.get('/', function(_, res) {
+    const filePath = './tools/doc/api-doc.html';
+    res.sendFile(filePath, { root: __dirname });
+})
+
+
 //////////////////////////////////////////////
 //// MOUNTING ROUTES ////
 //////////////////////////////////////////////
