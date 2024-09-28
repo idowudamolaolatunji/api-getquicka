@@ -122,12 +122,12 @@ userSchema.pre("save", function (next) {
 })
 
 
-userSchema.post(/^find/, function(next) {
-    const lastSeen = new Date(Date.now());
-    this.lastSeen = `${lastSeen.toDateString()} - ${lastSeen.toTimeString()}`;
+// userSchema.post(/^find/, function(next) {
+//     const lastSeen = new Date(Date.now());
+//     this.lastSeen = `${lastSeen.toDateString()} - ${lastSeen.toTimeString()}`;
 
-    next();
-});
+//     next();
+// });
 
 //////////////////////////////////////////////
 //// INSTANCE METHODS ////

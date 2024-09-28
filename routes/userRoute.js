@@ -18,7 +18,7 @@ const router = express.Router();
 // AUTH ROUTES
 router.post('/signup', authcontroller.signupUser);
 router.post('/login', authcontroller.loginUser);
-router.get('/logout', authcontroller.loginUser);
+router.get('/logout', authcontroller.logoutUser);
 
 // VERIFICATION ROUTES
 router.patch('/verify-otp', authcontroller.verifyOtp);

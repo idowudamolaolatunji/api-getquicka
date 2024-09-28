@@ -79,10 +79,10 @@ exports.verifyOtp = asyncWrapper(async function(req, res) {
     const { email, otp } = req.body;
 
     // FIND USER AND DO SOME CHECKINGS 
-    const user = await User.findOne({ email });
-    const { isOTPExpired } = user.isOTPExpired();
+    const user = await User.findOne({ email }).select('+otpCode');
+    const { isOTPExpired, remainingSec } = user.isOTPExpired();
     if(user.isOtpVerified) return res.json({ message: 'Account alreadty verified!' });
-    if(!isOTPExpired) return res.json({ message: 'OTP Expired, Request new OTP!'}) 
+    if(!isOTPExpired) return res.json({ message: 'OTP Expired, Request new OTP!'});
     if(+otp !== user.otpCode) return res.json({ message: 'Invalid OTP code!' });
 
     // UPDATE USER OTP
@@ -120,7 +120,7 @@ exports.requestOtp = asyncWrapper(async function(req, res) {
     });
 
     // GENERATE NEW OTP CODE
-    const otp = generateOtp(otp);
+    const otp = generateOtp();
     const emailOtpResendMessage = otpEmail(otp);
     user.otpIssuedAt = Date.now();
     user.otpCode = otp;
@@ -179,9 +179,8 @@ exports.updatePassword = asyncWrapper(async function (req, res) {
 
 
 exports.logoutUser = function(req, res) {
-    req.session.destroy();
     res.clearCookie('jwt')
-    res.status(200).json({ status: 'success' });    
+    res.status(200).json({ status: 'success' });
 };
 
 
