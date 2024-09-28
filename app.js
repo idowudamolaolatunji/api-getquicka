@@ -27,6 +27,7 @@ app.use(cors({
     origin: [
         "http://localhost:5173",
         "http://localhost:5174",
+        "https://web-app-getquick.vercel.app/",
         "https://getquicka.com",
         "https://getquicka.shop"
     ],
