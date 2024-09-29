@@ -28,7 +28,6 @@ const shippingMethodSchema = new mongoose.Schema({
     }
 }, {
     timeStamps: true,
-    suppressReservedKeysWarning: true
 });
 
 
