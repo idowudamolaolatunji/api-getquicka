@@ -76,7 +76,7 @@ const userSchema = new mongoose.Schema({
     passwordResetToken: { type: String, select: false },
     passwordResetExpires: { type: Date, select: false },
 }, {
-    timeStamps: true,
+    timestamps: true,
 });
 
 
@@ -139,8 +139,9 @@ userSchema.methods.isOTPExpired = function () {
         const currentTime = new Date(Date.now());
         const ExpiresTime = new Date(this.otpExpiresIn);
 
-        const remainingSec = Number((ExpiresTime - currentTime) / 1000).toFixed(0);
+        const remainingSec = Number((ExpiresTime - currentTime) / 1000).toFixed(0) || 0;
         const isOTPExpired = currentTime > ExpiresTime;
+        console.log(isOTPExpired, remainingSec)
 		return { isOTPExpired, remainingSec };
 	}
 	return false;

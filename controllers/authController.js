@@ -80,9 +80,9 @@ exports.verifyOtp = asyncWrapper(async function(req, res) {
 
     // FIND USER AND DO SOME CHECKINGS 
     const user = await User.findOne({ email }).select('+otpCode');
-    const { isOTPExpired, remainingSec } = user.isOTPExpired();
+    const { isOTPExpired } = user.isOTPExpired();
     if(user.isOtpVerified) return res.json({ message: 'Account alreadty verified!' });
-    if(!isOTPExpired) return res.json({ message: 'OTP Expired, Request new OTP!'});
+    if(isOTPExpired) return res.json({ message: 'OTP Expired, Request new OTP!'});
     if(+otp !== user.otpCode) return res.json({ message: 'Invalid OTP code!' });
 
     // UPDATE USER OTP
