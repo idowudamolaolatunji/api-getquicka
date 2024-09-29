@@ -17,7 +17,6 @@ const templateSchema = new mongoose.Schema({
     },
 }, {
     timeStamps: true,
-    suppressReservedKeysWarning: true
 });
 
 //////////////////////////////////////////////

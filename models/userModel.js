@@ -77,7 +77,6 @@ const userSchema = new mongoose.Schema({
     passwordResetExpires: { type: Date, select: false },
 }, {
     timeStamps: true,
-    suppressReservedKeysWarning: true
 });
 
 

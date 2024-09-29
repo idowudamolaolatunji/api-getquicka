@@ -24,7 +24,7 @@ const productSchema = new mongoose.Schema({
         required: true,
     },
     // slashPrice: Number,
-    collection: String,
+    productCollection: String,
     details: [{
         size: String,
         color: String,
@@ -40,8 +40,6 @@ const productSchema = new mongoose.Schema({
     }
 }, {
     timestamps: true,
-}, {
-    suppressReservedKeysWarning: true
 });
 
 

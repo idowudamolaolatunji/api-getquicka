@@ -7,7 +7,6 @@ const _Schema = new mongoose.Schema({
 
 }, {
     timeStamps: true,
-    suppressReservedKeysWarning: true
 });
 
 

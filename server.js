@@ -3,7 +3,8 @@ const dotenv = require('dotenv');
 
 const app = require('./app');
 dotenv.config({ path: './config.env' });
-const PORT = process.env.PORT || 3550
+const PORT = process.env.PORT || 3550;
+const HOST = process.env.HOST;
 
 //////////////////////////////////////////////
 //// DATABASE CONNECTION ////
@@ -26,6 +27,6 @@ connectDB();
 //////////////////////////////////////////////
 //// SERVER CONFIGURATION ////
 //////////////////////////////////////////////
-app.listen(PORT, 'localhost', function() {
+app.listen(PORT, HOST, function() {
     console.log(`Server is listening on port ${PORT}...`);
 });
