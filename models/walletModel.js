@@ -17,6 +17,8 @@ const walletSchema = new mongoose.Schema({
         type: Number,
         default: 0
     }
+}, {
+    suppressReservedKeysWarning: true
 });
 
 

@@ -6,7 +6,8 @@ const mongoose = require('mongoose');
 const _Schema = new mongoose.Schema({
 
 }, {
-    timeStamps: true
+    timeStamps: true,
+    suppressReservedKeysWarning: true
 });
 
 

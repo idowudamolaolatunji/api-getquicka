@@ -100,7 +100,8 @@ const storeSchema = new mongoose.Schema({
     settings: {  },
     // MORE TO COME...
 }, {
-    timestamps: true
+    timeStamps: true,
+    suppressReservedKeysWarning: true
 });
 
 

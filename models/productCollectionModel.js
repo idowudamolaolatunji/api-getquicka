@@ -19,6 +19,8 @@ const productCollectionSchema = new mongoose.Schema({
     image: String,
 }, {
     timestamps: true,
+}, {
+    suppressReservedKeysWarning: true
 });
 
 

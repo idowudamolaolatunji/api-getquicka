@@ -16,7 +16,8 @@ const templateSchema = new mongoose.Schema({
         enum: ['free', 'premium'],
     },
 }, {
-    timestamps: true,
+    timeStamps: true,
+    suppressReservedKeysWarning: true
 });
 
 //////////////////////////////////////////////

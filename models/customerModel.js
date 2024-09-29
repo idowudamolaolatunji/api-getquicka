@@ -21,6 +21,8 @@ const customerSchema = new mongoose.Schema({
         type: Date,
         default: Date.now,
     }
+}, {
+    suppressReservedKeysWarning: true
 });
 
 

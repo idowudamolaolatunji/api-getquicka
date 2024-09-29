@@ -15,6 +15,8 @@ const CategorySchema = new mongoose.Schema({
     slug: String,
 }, {
     timestamps: true,
+}, {
+    suppressReservedKeysWarning: true
 });
 
 
