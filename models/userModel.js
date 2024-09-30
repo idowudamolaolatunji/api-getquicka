@@ -20,6 +20,7 @@ const userSchema = new mongoose.Schema({
         lowercase: true,
         required: true,
     },
+    fullname: String,
     email: {
         type: String,
         unique: true,
@@ -106,8 +107,11 @@ userSchema.pre("save", async function (next) {
 userSchema.pre("save", function (next) {
     if (this.isNew || this.isModified('firstname') || this.isModified('lastname')) {
         // CREATING AND UPDATING USER SLUG
-        const slug = slugify(`${this.firstname} ${this.lastname}`, { lower: true });
+        const fullname = `${this.firstname} ${this.lastname}`.toLowerCase();
+        console.log(fullname)
+        const slug = slugify(fullname, { lower: true });
         this.slug = `${slug}-${this._id.toString().slice(0, 4)}`;
+        this.fullname = fullname;
     }
     
 	next();
