@@ -59,6 +59,8 @@ const userSchema = new mongoose.Schema({
     slug: String,
     lastSeen: String,
     country: String,
+    phone: String,
+    dialCode: String,
     countryCode: String,
     phoneNumber: String,
     state: String,

@@ -8,7 +8,7 @@ const sendEmail = require('../utils/sendEmail');
 
 
 exports.signupUser = asyncWrapper(async function(req, res) {
-    const { firstname, lastname, email, password, passwordConfirm, countryCode, phoneNumber } = req.body;
+    const { firstname, lastname, email, password, passwordConfirm, countryCode, phoneNumber, phone, dialCode, country } = req.body;
 
     // CHECK IF THE EMAIL ALREADY EXISTS
     const emailExist = await User.findOne({ email });
@@ -26,7 +26,8 @@ exports.signupUser = asyncWrapper(async function(req, res) {
         password, 
         passwordConfirm,
         otpCode: otp,
-        info: { countryCode, phoneNumber }
+        countryCode, phoneNumber,
+        phone, dialCode, country
     });
 
     // CREATE A USER WALLET
@@ -55,8 +56,27 @@ exports.loginUser = asyncWrapper(async function (req, res) {
 
     // FIND THE USER AND DO SOME CHECKINGS 
     const user = await User.findOne({ email }).select('+password');
-    if(!user || !user.isActive) return res.json({ message: 'Account does not exist or is inactive!' });
-    if (!user.isOtpVerified) return res.json({ message: 'Account not verified!' })
+    if(!user) return res.json({ message: 'Account does not exist!' });
+    if(!user.isActive) return res.json({ message: 'Account is inactive or disabled!' });
+    if (!user.isOtpVerified) {
+        // GENERATE OTP AND EMAIL MESSAGE
+        const otp = generateOtp();
+        const emailOtpMessage = otpEmail(otp);
+        
+        // SEND OTP EMAIL
+        await sendEmail({
+            email: user.email,
+            subject: 'Quicka OTP Verification Code',
+            message: emailOtpMessage
+        })
+        
+        return res.json({
+            data: {
+                user: { name: user.firstname, email: user.email },
+            },
+            message: 'Account not verified!'
+        })
+    }
         
     // COMPARE THE USER PASSWORD AND CHECK IF THE EAMIL IS CORRECT
     const comparedPassword = await user.comparePassword(password, user.password)
@@ -131,7 +151,7 @@ exports.requestOtp = asyncWrapper(async function(req, res) {
     res.status(200).json({
         status: 'success',
         message: 'OTP verification code resent!',
-        data: { user }
+        data: {user: { name: user.fullname, email: user.email, otp: user.otpCode }}
     });
 
     await sendEmail({
