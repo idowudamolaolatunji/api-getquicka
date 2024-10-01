@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const { default: slugify } = require('slugify');
 
 //////////////////////////////////////////////
 //// SCHEMA CONFIGURATION  ////
@@ -12,7 +13,6 @@ const storeSchema = new mongoose.Schema({
     template: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Template',
-        required: true,
     },
     customDesign: {
         logo: String,
@@ -24,16 +24,14 @@ const storeSchema = new mongoose.Schema({
     },
     name: {
         type: String,
-        unique: true,
         lowercase: true,
-        required: true
     },
     title: String,
     subTitle: String,
     description: String,
-    storeUrl: String,
-    subdomain: String,
     slug: String,
+    storeUrl: { type: String, unique: true },
+    subdomain: { type: String, unique: true },
     domain: {
         type: String,
         default: null
@@ -44,46 +42,28 @@ const storeSchema = new mongoose.Schema({
     },
     currency: {
         type: [String],
-        required: true
     },
     contact: {
-        dialingCode: {
-            type: String,
-            required: true
-        },
-        phoneNumber: {
-            type: String,
-            required: true
-        },
+        countryCode: String,
+        dialCode: String,
+        phoneNumber: String,
         phone: String,
         email: String,
     },
-    address: {
+    location: {
+        city: String,
+        country: String,
+        state: String,
+        address: {
+            type: String,
+            default: null,
+        },
         zip: {
             type: String,
             default: null
         },
-        city: {
-            type: String,
-            required: true
-        },
-        state: {
-            type: String,
-            required: true
-        },
-        street: {
-            type: String,
-            default: null,
-        },
-        country: {
-            type: String,
-            required: true
-        },
     },
-    category: {
-        type: String,
-        required: true
-    },
+    category: String,
     isPremium: {
         type: Boolean,
         default: false
@@ -108,17 +88,13 @@ const storeSchema = new mongoose.Schema({
 //// SCHEMA MIDDLEWARES ////
 //////////////////////////////////////////////
 storeSchema.pre('save', function(next) {
-    if(this.isNew) {
-        const storeName = this.name.toString().toLowerCase().replace(' ', '');
-        this.storeUrl = `${storeName}.quicka.store`;
-        this.subdomain = storeName;
+    if(this.isModified('name')) {
+        const storeName = this.name;
         this.title = storeName;
-        this.slug = `${storeName}-${this._id.toString().slice(0, 4)}`
+        const slug = slugify(storeName, { lower: true, replacement: "-"} )
+        this.slug = `${slug}-${this._id.toString().slice(0, 4)}`
     }
 
-    const contact = this.contact;
-    contact.phone = `${contact.dialingCode}${contact.phoneNumber}`
-    
     next();
 });
 

@@ -1,5 +1,6 @@
 const otpEmail = require('../emails/templates/otpEmail');
 const welcomeEmail = require('../emails/templates/welcomeEmail');
+const Store = require('../models/storeModel');
 const User = require('../models/userModel');
 const Wallet = require('../models/walletModel');
 const { asyncWrapper } = require('../utils/handlers');
@@ -30,16 +31,23 @@ exports.signupUser = asyncWrapper(async function(req, res) {
         phone, dialCode, country
     });
 
-    // CREATE A USER WALLET
-    await Wallet.create({
-        user: newUser._id,
-    });
+    await Store.create({
+        owner: newUser._id,
+        contact: {
+            countryCode,
+            dialCode,
+            phoneNumber,
+            phone,
+            email,
+        },
+        location: { country }
+    })
 
     // SEND BACK A RESPONSE 
     res.status(201).json({
         status: 'success',
         message: 'Account created successfully!',
-        data: { user: newUser }
+        data: { user: { name: newUser.firstname, email: newUser.email } }
     });
 
     // SEND OTP EMAIL
@@ -151,7 +159,7 @@ exports.requestOtp = asyncWrapper(async function(req, res) {
     res.status(200).json({
         status: 'success',
         message: 'OTP verification code resent!',
-        data: {user: { name: user.fullname, email: user.email, otp: user.otpCode }}
+        data: {user: { name: user.fullname, email: user.email }}
     });
 
     await sendEmail({
