@@ -35,17 +35,9 @@ const storeSchema = new mongoose.Schema({
     subdomain: String,
     isCoperated: String,
     type: String,
-    domain: {
-        type: String,
-        default: null
-    },
-    previousUrl: {
-        type: String,
-        default: null
-    },
-    currency: {
-        type: [String],
-    },
+    domain: String,
+    previousUrl: String,
+    currency: [String],
     contact: {
         countryCode: String,
         dialCode: String,
