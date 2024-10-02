@@ -42,6 +42,8 @@ exports.onBoardStore = asyncWrapper(async function(req, res) {
     });
     
     const token = signToken(user._id);
+    user.isStoreSetup = true;
+    await user.save({ validateModifiedOnly: true });
 
     res.status(200).json({
         status: 'success',
