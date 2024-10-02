@@ -85,7 +85,7 @@ exports.onBoardStoreAfterSignup = asyncWrapper(async function(req, res) {
     res.status(200).json({
         status: 'success',
         message: 'Completed!',
-        data: { user },
+        data: { user, store },
         token
     });
 });
@@ -97,7 +97,8 @@ exports.loginUser = asyncWrapper(async function (req, res) {
     // FIND THE USER AND DO SOME CHECKINGS 
     const user = await User.findOne({ email }).select('+password');
     if(!user) return res.json({ message: 'Account does not exist!' });
-    if(!user.isActive) return res.json({ message: 'Account is inactive or disabled!' });
+    if(!user.isActive) return res.json({ message: 'Account is inactive or disabled! Contact Support Team.' });
+
     if (!user.isOtpVerified) {
         // GENERATE OTP AND EMAIL MESSAGE
         const otp = generateOtp();
@@ -114,7 +115,7 @@ exports.loginUser = asyncWrapper(async function (req, res) {
             data: {
                 user: { name: user.firstname, email: user.email },
             },
-            message: 'Account not verified!'
+            message: 'Account not verified. An email has been sent!'
         })
     }
         
@@ -125,11 +126,19 @@ exports.loginUser = asyncWrapper(async function (req, res) {
     // SIGNING ACCESS TOKEN
     const token = signToken(user._id);
 
+    // GET THE USER'S STORE
+    const store = await Store.findOne({ owner: user._id });
+    if(!store) {
+        user.isActive = false;
+        await user.save({ validateModifiedOnly: true });
+        return res.json({ message: `This is not possible that you don't have a store at this point 🤣🤣. Just note that this account would be deactivated in 0.5 seconds! \n And If you don't know what went wrong, Contact us at support@getquicka.com` });
+    }
+
     // SEND BACK RESPONSE 
     res.status(200).json({
         status: 'success',
         message: 'Login successful!',
-        data: { user },
+        data: { user, store },
         token
     });
 });
