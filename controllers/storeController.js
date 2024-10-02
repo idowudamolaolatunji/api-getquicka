@@ -1,9 +1,7 @@
 const Category = require('../models/categoryModel');
 const Store = require('../models/storeModel');
-const User = require('../models/userModel');
 const refactory = require('../controllers/handleRefactory');
 const { asyncWrapper } = require('../utils/handlers');
-const { signToken } = require('../utils/helpers');
 
 
 //////////////////////////////////////////////
@@ -20,38 +18,6 @@ exports.deleteCategory = refactory.deleteOne(Category, 'category');
 //////////////////////////////////////////////
 //// STORE LOGIC  ////
 //////////////////////////////////////////////
-
-
-// onboarding store on signup, come back to modify
-exports.onBoardStore = asyncWrapper(async function(req, res) {
-    const { owner } = req.params;
-    
-    const user = await User.findById(owner);
-    if(!user) return res.json({ message: 'User doesn\'t exist!'});
-    if(!user.isOtpVerified) return res.json({ message: 'User not verified!' });
-    if(!user.isActive) return res.json({ message: 'User account inactive' });
-    if(user.isStoreSetup) return res.json({ message: "Go and set up store from dashboard on a different route"});
-
-
-    const store = await Store.findOne({ owner });
-    if(!store) return res.json({ message: "No store by this user id" });
-
-    await Store.findByIdAndUpdate(store._id, req.body, {
-        runValidators: true,
-        new: true,
-    });
-    
-    const token = signToken(user._id);
-    user.isStoreSetup = true;
-    await user.save({ validateModifiedOnly: true });
-
-    res.status(200).json({
-        status: 'success',
-        message: 'Completed!',
-        data: { user },
-        token
-    });
-});
 
 
 exports.uploadLogoImage = refactory.uploadOneImage(Store, 'logo')

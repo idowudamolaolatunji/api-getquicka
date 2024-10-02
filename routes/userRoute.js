@@ -24,6 +24,9 @@ router.get('/logout', authcontroller.logoutUser);
 router.patch('/verify-otp', authcontroller.verifyOtp);
 router.patch('/request-otp', authcontroller.requestOtp);
 
+// STORE ONBOARD ON SIGNUP AND VERIFICATION
+router.patch('/onboarding-store/:owner',  authcontroller.onBoardStoreAfterSignup)
+
 // FORGOT AND RESET ROUTES
 router.patch('/forgot-password', authcontroller.forgotPassword);
 router.patch('/reset-password', authcontroller.resetPassord);

@@ -58,6 +58,39 @@ exports.signupUser = asyncWrapper(async function(req, res) {
 });
 
 
+
+// ONBOARDING STORE AFTER USER SIGNUP AND OTP VERIFICATION
+exports.onBoardStoreAfterSignup = asyncWrapper(async function(req, res) {
+    const { owner } = req.params;
+    
+    const user = await User.findById(owner);
+    if(!user) return res.json({ message: 'User doesn\'t exist!'});
+    if(!user.isOtpVerified) return res.json({ message: 'User not verified!' });
+    if(!user.isActive) return res.json({ message: 'User account inactive' });
+    if(user.isStoreSetup) return res.json({ message: "Go and set up store from dashboard on a different route"});
+
+
+    const store = await Store.findOne({ owner });
+    if(!store) return res.json({ message: "No store by this user id" });
+
+    await Store.findByIdAndUpdate(store._id, req.body, {
+        runValidators: true,
+        new: true,
+    });
+    
+    const token = signToken(user._id);
+    user.isStoreSetup = true;
+    await user.save({ validateModifiedOnly: true });
+
+    res.status(200).json({
+        status: 'success',
+        message: 'Completed!',
+        data: { user },
+        token
+    });
+});
+
+
 exports.loginUser = asyncWrapper(async function (req, res) {
     const { email, password } = req.body;
 
@@ -109,7 +142,7 @@ exports.verifyOtp = asyncWrapper(async function(req, res) {
     const user = await User.findOne({ email }).select('+otpCode');
     if(!user) return res.json({ message: 'No user with this email' });
 
-    const { isOTPExpired } = user.isOTPExpired();
+    const { isOTPExpired } = user?.isOTPExpired();
     if(user.isOtpVerified) return res.json({ message: 'Account alreadty verified!' });
     if(isOTPExpired) return res.json({ message: 'OTP Expired, Request new OTP!'});
     if(+otp !== user.otpCode) return res.json({ message: 'Invalid OTP code!' });
@@ -142,7 +175,10 @@ exports.requestOtp = asyncWrapper(async function(req, res) {
 
     // FIND USER AND DO SOME CHECKINGS
     const user = await User.findOne({ email });
-    const { isOTPExpired, remainingSec } = user.isOTPExpired();
+    if(!user) return res.json({ message: 'No user with this email' });
+
+    // DO SOME OTP CHECKINGS..
+    const { isOTPExpired, remainingSec } = user?.isOTPExpired();
     if(user.isOtpVerified) return res.json({ message: 'Account alreadty verified!' });
     if(!isOTPExpired) return res.json({
         message: `OTP not yet expired, Remains ${remainingSec}+ seconds..`

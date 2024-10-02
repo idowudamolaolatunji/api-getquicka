@@ -29,7 +29,6 @@ router.patch('/upload-banner', isAuthProtected, uploadSingleImage, resizeSingleB
 router.get('/load-store/:url', storeController.loadStoreByUrl);
 
 // ADMIN EDIT/UPDATE AND DELETE STORE
-router.patch('/onboard-store/:owner', storeController.onBoardStore)
 router.get('/', isAuthProtected, isRestricted, storeController.getStores);
 router.get('/:id', isAuthProtected, isRestricted, storeController.getStore);
 
