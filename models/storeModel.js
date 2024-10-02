@@ -33,6 +33,8 @@ const storeSchema = new mongoose.Schema({
     slug: String,
     storeUrl: { type: String, unique: true },
     subdomain: { type: String, unique: true },
+    isCoperated: String,
+    type: String,
     domain: {
         type: String,
         default: null

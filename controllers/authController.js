@@ -2,7 +2,6 @@ const otpEmail = require('../emails/templates/otpEmail');
 const welcomeEmail = require('../emails/templates/welcomeEmail');
 const Store = require('../models/storeModel');
 const User = require('../models/userModel');
-const Wallet = require('../models/walletModel');
 const { asyncWrapper } = require('../utils/handlers');
 const { generateOtp, signToken } = require('../utils/helpers');
 const sendEmail = require('../utils/sendEmail');
