@@ -32,7 +32,6 @@ const storeSchema = new mongoose.Schema({
     description: String,
     slug: String,
     storeUrl: String,
-    subdomain: String,
     isCoperated: String,
     type: String,
     domain: String,
@@ -86,6 +85,7 @@ storeSchema.pre('save', function(next) {
     if(this.isModified('name')) {
         const storeName = this.name;
         this.title = storeName;
+        this.storeUrl = `https://${this.storeUrl}.quicka.store`;
         const slug = slugify(storeName, { lower: true, replacement: "-"} )
         this.slug = `${slug}-${this._id.toString().slice(0, 4)}`
     }

@@ -16,7 +16,7 @@ exports.signupUser = asyncWrapper(async function(req, res) {
 
     // GENERATE OTP AND EMAIL MESSAGE
     const otp = generateOtp();
-    const emailOtpMessage = otpEmail(otp);
+    const emailOtpMessage = otpEmail(otp, firstname);
 
     // CREATE USER
     const newUser = await User.create({
@@ -70,13 +70,15 @@ exports.onBoardStoreAfterSignup = asyncWrapper(async function(req, res) {
     if(user.isStoreSetup) return res.json({ message: "Go and set up store from dashboard on a different route"});
 
 
+    const { name, storeUrl, category, isCoperated, type } = req.body;
     const store = await Store.findOne({ owner });
     if(!store) return res.json({ message: "No store by this user id" });
-
-    await Store.findByIdAndUpdate(store._id, req.body, {
-        runValidators: true,
-        new: true,
-    });
+    store.name = name;
+    store.storeUrl = storeUrl;
+    store.category = category;
+    store.isCoperated = isCoperated;
+    store.type = type;
+    await store.save({});
     
     const token = signToken(user._id);
     user.isStoreSetup = true;
@@ -87,6 +89,16 @@ exports.onBoardStoreAfterSignup = asyncWrapper(async function(req, res) {
         message: 'Completed!',
         data: { user, store },
         token
+    });
+
+    // // CREATE EMAIL MESSAGE
+    const emailOtpVerifiedMessage = welcomeEmail(user);
+
+    // SEND WELCOME MESSAGE
+    await sendEmail({
+        email: user.email,
+        subject: 'Welcome to quicka',
+        message: emailOtpVerifiedMessage,
     });
 });
 
@@ -161,20 +173,11 @@ exports.verifyOtp = asyncWrapper(async function(req, res) {
     user.otpCode = undefined;
     await user.save({ validateBeforeSave: false });
 
-    // CREATE EMAIL MESSAGE
-    const emailOtpVerifiedMessage = welcomeEmail(user);
-
     // SEND BACK RESPONSE
     res.status(200).json({
         status: 'success',
         message: 'OTP verified!',
         data: { user }
-    });
-
-    // SEND WELCOME MESSAGE
-    await sendEmail({
-        email, subject: 'Welcome to quicka',
-        message: emailOtpVerifiedMessage,
     });
 });
 
@@ -195,7 +198,7 @@ exports.requestOtp = asyncWrapper(async function(req, res) {
 
     // GENERATE NEW OTP CODE
     const otp = generateOtp();
-    const emailOtpResendMessage = otpEmail(otp);
+    const emailOtpResendMessage = otpEmail(otp, user.firstname);
     user.otpIssuedAt = Date.now();
     user.otpCode = otp;
     await user.save({ validateBeforeSave: false });
