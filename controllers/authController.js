@@ -70,19 +70,22 @@ exports.onBoardStoreAfterSignup = asyncWrapper(async function(req, res) {
     if(user.isStoreSetup) return res.json({ message: "Go and set up store from dashboard on a different route"});
 
 
-    const { name, storeUrl, category, isCoperated, type } = req.body;
+    const { name, storeUrl, category, isCoperated, type, goalsChoosen } = req.body;
     const store = await Store.findOne({ owner });
     if(!store) return res.json({ message: "No store by this user id" });
     store.name = name;
     store.storeUrl = storeUrl;
     store.category = category;
     store.isCoperated = isCoperated;
-    store.type = type;
+    store.type = type || null;
+    store.reasonAndGoalOptions = goalsChoosen
     await store.save({});
     
-    const token = signToken(user._id);
-    user.isStoreSetup = true;
+    user.storeBasicSetup = true;
     await user.save({ validateModifiedOnly: true });
+
+    // SIGN USER TOKEN
+    const token = signToken(user._id);
 
     res.status(200).json({
         status: 'success',
