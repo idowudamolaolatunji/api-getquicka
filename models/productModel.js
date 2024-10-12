@@ -24,7 +24,7 @@ const productSchema = new mongoose.Schema({
         required: true,
     },
     // slashPrice: Number,
-    productCollection: String,
+    productCollection: [String],
     details: [{
         size: String,
         color: String,

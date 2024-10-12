@@ -62,10 +62,10 @@ const storeSchema = new mongoose.Schema(
 		},
 		category: String,
 		storeOnboard: {
+			hasCustomisedStore: { type: Boolean, default: false },
+			hasFirstProduct: { type: Boolean, default: false },
 			hasShippingRates: { type: Boolean, default: false },
 			hasBankDetails: { type: Boolean, default: false },
-			hasFirstProduct: { type: Boolean, default: false },
-			hasCustomisedStore: { type: Boolean, default: false },
 		},
 		reasonAndGoalOptions: [String],
 		isPremium: {
