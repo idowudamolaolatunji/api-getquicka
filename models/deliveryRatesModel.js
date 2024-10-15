@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 //////////////////////////////////////////////
 //// SCHEMA CONFIGURATION  ////
 //////////////////////////////////////////////
-const shippingMethodSchema = new mongoose.Schema({
+const deliveryRatesSchema = new mongoose.Schema({
     store: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Store',
@@ -34,7 +34,7 @@ const shippingMethodSchema = new mongoose.Schema({
 //////////////////////////////////////////////
 //// SCHEMA MIDDLEWARES ////
 //////////////////////////////////////////////
-productSchema.pre(/^find/, function(next) {
+deliveryRatesSchema.pre(/^find/, function(next) {
     this.populate({
         path: 'store',
         select: '_id'
@@ -47,5 +47,5 @@ productSchema.pre(/^find/, function(next) {
 //////////////////////////////////////////////
 //// MODEL AND COLLECTION ////
 //////////////////////////////////////////////
-const ShippingMethod = mongoose.model('ShippingMethod', shippingMethodSchema);
-module.exports = ShippingMethod;
+const DeliveryRate = mongoose.model('DeliveryRate', deliveryRatesSchema);
+module.exports = DeliveryRate;

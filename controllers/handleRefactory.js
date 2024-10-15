@@ -1,4 +1,5 @@
 const Store = require("../models/storeModel");
+const User = require("../models/userModel");
 const { asyncWrapper } = require("../utils/handlers");
 const { capitalizeFirstLetter } = require("../utils/helpers");
 
@@ -35,15 +36,26 @@ exports.createOne = function(Model, title) {
 
 exports.createOneForStore = function(Model, title) {
     return asyncWrapper(async function(req, res) {
-        const store = await Store.findOne({ owner: req.user._id });
+        const owner = await User.findById(req.user._id);
+        const store = await Store.findOne({ owner: owner._id });
         if(!store) return res.json({ message: 'You don\'t have a store yet!' });
 
         const document = await Model.create({ ...req.body, store: store._id });
+        const docs = await Model.find({ store: store._id })
 
+        if(title == "product" && docs.length > 1) {
+            console.log(docs);
+            store.storeOnboard.hasFirstProduct = true;
+            await store.save({});
+        }
+
+        console.log(store)
+        
         res.status(200).json({
             status: 'success',
             message: `${capitalizeFirstLetter(title)} created successfully!`,
-            data: { [title]: document }
+            data: { [title]: document },
+            useful: { data: { owner, store } }
         })
     })
 }
@@ -56,7 +68,7 @@ exports.uploadOneImage = function(Model, title) {
         if(!document) return res.json({ message: `Document not found!` });
 
         let image;
-        if(req.file) image = req.file.filename;
+        if(req.file) image = `/assets/groups/${req.file.filename}`;
     
         // await Model.findByIdAndUpdate(id, { image }, {
         //     new: true,

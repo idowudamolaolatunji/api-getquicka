@@ -27,12 +27,12 @@ router.get('/:productId', productController.getProductByProductId);
 
 
 // GET COLLECTION / COLLECTIONS
-router.get('/get-collections', productController.getAllProductCollections);
+router.get('/collection/all', productController.getAllProductCollections);
 router.get('/collection/product', productController.getProductInCollection);
 
 
 // CREATE COLLECTION, EDIT/UPDATE AND DELETE
-router.post('/collection', isAuthProtected, productController.createProductCollection);
+router.post('/collection/create', isAuthProtected, productController.createProductCollection);
 router.post('/collection/upload-image/:id', isAuthProtected, uploadSingleImage, resizeSingleGroupImage, productController.uploadProductCollectionImage);
 router.patch('/collection/:id', isAuthProtected, productController.updateProductCollection);
 router.delete('/collection/:id', isAuthProtected, productController.deleteProductCollection);

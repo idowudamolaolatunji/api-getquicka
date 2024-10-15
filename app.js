@@ -8,6 +8,7 @@ const app = express();
 const userRouter = require('./routes/userRoute');
 const storeRouter = require('./routes/storeRoute');
 const productRouter = require('./routes/productRoute');
+const deliveryRateRouter = require('./routes/deliveryRateRoute');
 
 //////////////////////////////////////////////
 //// MIDDLEWARES ////
@@ -35,6 +36,7 @@ app.use(cors({
     allowedHeaders: ["Content-Type", "Authorization"],
 }));
 
+
 // ALLOWING STATIC FILES
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -57,6 +59,7 @@ app.get('/', function(_, res) {
 app.use('/api/users', userRouter);
 app.use('/api/stores', storeRouter);
 app.use('/api/products', productRouter);
+app.use('/api/delivery-rates', deliveryRateRouter);
 
 
 module.exports = app;

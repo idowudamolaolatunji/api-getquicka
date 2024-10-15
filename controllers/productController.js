@@ -34,6 +34,7 @@ exports.getOneProduct = refactory.getOne(Product, 'product');
 exports.uploadProductImages = asyncWrapper(async function(req, res) {
     const { id } = req.params;
     const reqFiles = req.files;
+    console.log(req.files)
     
     const product = await Product.findById(id);
     if(!product) return res.json({ message: 'Product not found!' });

@@ -23,21 +23,42 @@ const productSchema = new mongoose.Schema({
         type: Number,
         required: true,
     },
-    // slashPrice: Number,
+    itemCost: {
+        type: Number,
+        default: null
+    },
+    discount: {
+        type: Number,
+        default: null
+    },
+    discountType: {
+        type: String,
+        enum: ["no-discount", "fixed-price", "percentage"],
+        default: "no-discount",
+    },
     productCollection: [String],
-    details: [{
+    variations: [{
         size: String,
         color: String,
         quantity: Number,
     }],
     stockAmount: {
         type: Number,
-        default: 1
+        default: null
     },
     isSoldOut: {
         type: Boolean,
         default: false
-    }
+    },
+    status: {
+        type: String,
+        enum: ["draft", "publish"],
+        default: "draft",
+    },
+    trackInventory: Boolean,
+    isVisible: Boolean,
+    isPhysical: Boolean,
+
 }, {
     timestamps: true,
 });

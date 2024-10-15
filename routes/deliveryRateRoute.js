@@ -2,15 +2,14 @@
 //////////////////////////////////////////////////
 const express = require('express');
 const {
-    createShippingMethod, 
-    getAllShippingMethod, 
-    getOneShippingMethod, 
-    updateShippingMethod, 
-    deleteShippingMethod,
-    getShippingMethodsByStoreId
-} = require('../controllers/shippingMethodController');
+    createDeliveryRate, 
+    getAllDeliveryRates, 
+    getOneDeliveryRate, 
+    updateDeliveryRate, 
+    deleteDeliveryRate,
+    getDeliveryRatesByStoreId
+} = require('../controllers/deliveryRateController');
 const { isAuthProtected, isRestricted } = require('../middlewares/protected');
-
 
 
 //////////////////////////////////////////////////
@@ -22,16 +21,16 @@ const router = express.Router();
 //// CREATING AND CONFIGURING ROUTES ////
 //////////////////////////////////////////////
 
-// CREATE SHIPPING METHOD, EDIT/UPDATE AND DELETE
-router.post('/', isAuthProtected, createShippingMethod);
-router.patch('/:id', isAuthProtected, updateShippingMethod);
-router.delete('/:id', isAuthProtected, deleteShippingMethod)
+// CREATE DELIVERY RATE, EDIT/UPDATE AND DELETE
+router.post('/', isAuthProtected, createDeliveryRate);
+router.patch('/:id', isAuthProtected, updateDeliveryRate);
+router.delete('/:id', isAuthProtected, deleteDeliveryRate)
 
 
-// GET SHIPPING METHOD(S)
-router.get('/', getAllShippingMethod);
-router.get('/:id', getOneShippingMethod);
-router.get('/store/:id', getShippingMethodsByStoreId);
+// GET DELIVERY RATE(S)
+router.get('/', getAllDeliveryRates);
+router.get('/:id', getOneDeliveryRate);
+router.get('/store/:id', getDeliveryRatesByStoreId);
 
 
 //////////////////////////////////////////////
