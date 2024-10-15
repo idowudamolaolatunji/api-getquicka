@@ -43,13 +43,12 @@ exports.createOneForStore = function(Model, title) {
         const document = await Model.create({ ...req.body, store: store._id });
         const docs = await Model.find({ store: store._id })
 
-        if(title == "product" && docs.length > 1) {
+        if(title == "product" && docs.length > 0) {
             console.log(docs);
             store.storeOnboard.hasFirstProduct = true;
             await store.save({});
         }
 
-        console.log(store)
         
         res.status(200).json({
             status: 'success',
@@ -89,7 +88,7 @@ exports.uploadOneImage = function(Model, title) {
 exports.getOne = function(Model, title) {
     return asyncWrapper(async function(req, res) {
         const { id } = req.params;
-        const document = await Model.findOne(id);
+        const document = await Model.findById(id);
 
         if(!document) return res.json({ message: `No ${title} found with that ID` });
 

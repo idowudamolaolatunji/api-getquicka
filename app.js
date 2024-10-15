@@ -8,6 +8,7 @@ const app = express();
 const userRouter = require('./routes/userRoute');
 const storeRouter = require('./routes/storeRoute');
 const productRouter = require('./routes/productRoute');
+const productCollectionRouter = require('./routes/productCollectionRoute');
 const deliveryRateRouter = require('./routes/deliveryRateRoute');
 
 //////////////////////////////////////////////
@@ -59,6 +60,7 @@ app.get('/', function(_, res) {
 app.use('/api/users', userRouter);
 app.use('/api/stores', storeRouter);
 app.use('/api/products', productRouter);
+app.use('/api/collections', productCollectionRouter);
 app.use('/api/delivery-rates', deliveryRateRouter);
 
 

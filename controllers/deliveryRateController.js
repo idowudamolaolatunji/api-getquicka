@@ -13,7 +13,14 @@ exports.createDeliveryRate = asyncWrapper(async function(req, res) {
     const store = await Store.findOne({ owner: owner._id });
     if(!store) return res.json({ message: 'You don\'t have a store yet!' });
 
+    const AlreadySeen = await DeliveryRate.findOne({ title: req.body.title });
+    if(AlreadySeen) return res.json({ message: "Rate Already Exist" });
+
     const newDeliveryRate = await DeliveryRate.create({ ...req.body, store: store._id });
+    if((await DeliveryRate.findOne({ store: store._id })).length > 0) {
+        store.storeOnboard.hasDeliveryRate = true;
+        await store.save({});
+    }
 
     res.status(201).json({
         status: 'success',

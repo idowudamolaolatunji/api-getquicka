@@ -64,7 +64,7 @@ const storeSchema = new mongoose.Schema(
 		storeOnboard: {
 			hasCustomisedStore: { type: Boolean, default: false },
 			hasFirstProduct: { type: Boolean, default: false },
-			hasShippingRates: { type: Boolean, default: false },
+			hasDeliveryRate: { type: Boolean, default: false },
 			hasBankDetails: { type: Boolean, default: false },
 		},
 		reasonAndGoalOptions: [String],

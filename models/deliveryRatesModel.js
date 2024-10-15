@@ -14,14 +14,13 @@ const deliveryRatesSchema = new mongoose.Schema({
         unique: true,
         required: true
     },
-    shippingType: {
+    deliveryType: {
         type: String,
         enum: ['free', 'paid'],
         default: 'paid',
     },
     fee: Number,
     description: String,
-    locations: [String],
     visible: {
         type: Boolean,
         default: true
@@ -30,18 +29,6 @@ const deliveryRatesSchema = new mongoose.Schema({
     timeStamps: true,
 });
 
-
-//////////////////////////////////////////////
-//// SCHEMA MIDDLEWARES ////
-//////////////////////////////////////////////
-deliveryRatesSchema.pre(/^find/, function(next) {
-    this.populate({
-        path: 'store',
-        select: '_id'
-    });
-
-    next();
-});
 
 
 //////////////////////////////////////////////

@@ -1,9 +1,9 @@
 //////////////////////////////////////////////////
 //////////////////////////////////////////////////
 const express = require('express');
+const { uploadMultipleImage } = require('../middlewares/multer');
 const productController = require('../controllers/productController');
 const { isAuthProtected, isRestricted } = require('../middlewares/protected');
-const { uploadMultipleImage, uploadSingleImage, resizeSingleGroupImage } = require('../middlewares/multer');
 
 //////////////////////////////////////////////////
 //////////////////////////////////////////////////
@@ -21,21 +21,9 @@ router.patch('/:id', isAuthProtected, productController.updateProduct);
 router.delete('/:id', isAuthProtected, productController.deleteProduct);
 
 // GET PRODUCT / PRODUCTS
-router.get('/', productController.getAllProducts);
-router.get('/:id', productController.getOneProduct);
-router.get('/:productId', productController.getProductByProductId);
-
-
-// GET COLLECTION / COLLECTIONS
-router.get('/collection/all', productController.getAllProductCollections);
-router.get('/collection/product', productController.getProductInCollection);
-
-
-// CREATE COLLECTION, EDIT/UPDATE AND DELETE
-router.post('/collection/create', isAuthProtected, productController.createProductCollection);
-router.post('/collection/upload-image/:id', isAuthProtected, uploadSingleImage, resizeSingleGroupImage, productController.uploadProductCollectionImage);
-router.patch('/collection/:id', isAuthProtected, productController.updateProductCollection);
-router.delete('/collection/:id', isAuthProtected, productController.deleteProductCollection);
+router.get('/all', productController.getAllProducts);
+router.get('/one/:id', productController.getOneProduct);
+router.get('/one/id/:productId', productController.getProductByProductId);
 
 
 //////////////////////////////////////////////
