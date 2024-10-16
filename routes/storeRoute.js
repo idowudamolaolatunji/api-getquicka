@@ -22,7 +22,7 @@ router.get('/category/:id', storeController.getStoresInCategory);
 
 // STORE OWNERS CREATE STORE, AND UPLOAD IMAGES (LOGO / MAIN BANNER)
 // router.post('/', isAuthProtected, storeController.createStore);
-router.patch('/upload-logo', isAuthProtected, uploadSingleImage, resizeSingleLogoImage, storeController.uploadLogoImage);
+router.post('/upload-logo/:id', isAuthProtected, uploadSingleImage, resizeSingleLogoImage, storeController.uploadLogoImage);
 router.patch('/upload-banner', isAuthProtected, uploadSingleImage, resizeSingleBannerImage, storeController.uploadBannerImage);
 
 // LOAD STORE DATA

@@ -1,5 +1,6 @@
 const otpEmail = require('../emails/templates/otpEmail');
 const welcomeEmail = require('../emails/templates/welcomeEmail');
+const BankDetail = require('../models/bankDetailModel');
 const Store = require('../models/storeModel');
 const User = require('../models/userModel');
 const { asyncWrapper } = require('../utils/handlers');
@@ -58,7 +59,6 @@ exports.signupUser = asyncWrapper(async function(req, res) {
 });
 
 
-
 // ONBOARDING STORE AFTER USER SIGNUP AND OTP VERIFICATION
 exports.onBoardStoreAfterSignup = asyncWrapper(async function(req, res) {
     const { owner } = req.params;
@@ -70,19 +70,23 @@ exports.onBoardStoreAfterSignup = asyncWrapper(async function(req, res) {
     if(user.isStoreSetup) return res.json({ message: "Go and set up store from dashboard on a different route"});
 
 
-    const { name, storeUrl, category, isCoperated, type, goalsChoosen } = req.body;
+    const { name, storeUrl, category, isRegistered, regType, goalsChoosen } = req.body;
     const store = await Store.findOne({ owner });
     if(!store) return res.json({ message: "No store by this user id" });
+
     store.name = name;
     store.storeUrl = storeUrl;
     store.category = category;
-    store.isCoperated = isCoperated;
-    store.type = type || null;
+    store.isRegistered = isRegistered;
+    store.regType = regType;
     store.reasonAndGoalOptions = goalsChoosen
     await store.save({});
     
     user.storeBasicSetup = true;
     await user.save({ validateModifiedOnly: true });
+
+    // create details for payment
+    const bankInfo = await BankDetail.create({ store: store._id });
 
     // SIGN USER TOKEN
     const token = signToken(user._id);
@@ -90,7 +94,7 @@ exports.onBoardStoreAfterSignup = asyncWrapper(async function(req, res) {
     res.status(200).json({
         status: 'success',
         message: 'Completed!',
-        data: { user, store },
+        data: { user, store, bankInfo },
         token
     });
 
@@ -98,11 +102,11 @@ exports.onBoardStoreAfterSignup = asyncWrapper(async function(req, res) {
     const emailOtpVerifiedMessage = welcomeEmail(user);
 
     // SEND WELCOME MESSAGE
-    await sendEmail({
-        email: user.email,
-        subject: 'Welcome to quicka',
-        message: emailOtpVerifiedMessage,
-    });
+    // await sendEmail({
+    //     email: user.email,
+    //     subject: 'Welcome to quicka',
+    //     message: emailOtpVerifiedMessage,
+    // });
 });
 
 
@@ -143,6 +147,7 @@ exports.loginUser = asyncWrapper(async function (req, res) {
 
     // GET THE USER'S STORE
     const store = await Store.findOne({ owner: user._id });
+    const bankInfo = await BankDetail.findOne({ store: store._id });
     if(!store) {
         user.isActive = false;
         await user.save({ validateModifiedOnly: true });
@@ -153,7 +158,7 @@ exports.loginUser = asyncWrapper(async function (req, res) {
     res.status(200).json({
         status: 'success',
         message: 'Login successful!',
-        data: { user, store },
+        data: { user, store, bankInfo },
         token
     });
 });

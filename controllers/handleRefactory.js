@@ -67,14 +67,15 @@ exports.uploadOneImage = function(Model, title) {
         if(!document) return res.json({ message: `Document not found!` });
 
         let image;
-        if(req.file) image = `/assets/groups/${req.file.filename}`;
-    
-        // await Model.findByIdAndUpdate(id, { image }, {
-        //     new: true,
-        //     runValidators: true,
-        // });
-        
-        document.image = image;
+        console.log(req.file)
+        if(title === "logo") {
+            if(req.file) image = `/assets/logos/${req.file.filename}`;
+            document.logo = image;
+        } else {
+            if(req.file) image = `/assets/groups/${req.file.filename}`;
+            document.image = image;
+        }
+
         await document.save({});
     
         res.status(200).json({

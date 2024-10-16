@@ -5,7 +5,7 @@ const { asyncWrapper } = require('../utils/handlers');
 const { filterObj } = require("../utils/helpers");
 
 
-exports.getEveryUsers = refactory.getAll(User, 'users', { limit: 100 });
+exports.getEveryUsers = refactory.getAll(User, 'users', { limitTO: 100 });
 exports.getUserById = refactory.getOne(User, 'user');
 
 

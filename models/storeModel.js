@@ -19,7 +19,6 @@ const storeSchema = new mongoose.Schema(
 			ref: "Template",
 		},
 		customDesign: {
-			logo: String,
 			spinner: String,
 			introBanner: String,
 			primaryColor: String,
@@ -30,13 +29,17 @@ const storeSchema = new mongoose.Schema(
 			type: String,
 			lowercase: true,
 		},
+		logo: {
+			type: String,
+			default: null
+		},
 		title: String,
 		subTitle: String,
 		description: String,
 		slug: String,
 		storeUrl: String,
-		isCoperated: String,
-		type: String,
+		isRegistered: String,
+		regType: String,
 		domain: String,
 		previousUrl: String,
 		currency: [String],

@@ -10,7 +10,7 @@ const { asyncWrapper } = require('../utils/handlers');
 exports.createStoreCategory = refactory.createOne(Category, 'category');
 exports.uploadCategoryImage = refactory.uploadOneImage(Category, 'category')
 
-exports.getStoreCategories = refactory.getAll(Category, 'categories', {});
+exports.getStoreCategories = refactory.getAll(Category, 'categories', { limitTO: 100, sortBy: {createdAt: 1} });
 exports.updateCategory = refactory.updateOne(Category, 'category');
 exports.deleteCategory = refactory.deleteOne(Category, 'category');
 
