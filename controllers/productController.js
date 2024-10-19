@@ -17,6 +17,23 @@ exports.getAllProductCollections = refactory.getAll(ProductCollection, 'collecti
     limitTO: 50, sortBy: {name: -1}
 });
 
+
+exports.getMyProductCollections = asyncWrapper(async function(req, res) {
+    const id = req.user._id;
+
+    const store = await Store.findOne({ owner: id });
+    if(!store) return res.json({ message: 'You don\'t have a store yet!' });
+
+    const collections = await ProductCollection.find({ store: store._id });
+    if(!collections || collections.length < 1) return res.json({ message: "No collections yet!" });
+
+    res.status(200).json({
+        status: 'success',
+        data: { collections }
+    });
+
+});
+
 exports.updateProductCollection = refactory.updateOne(ProductCollection, 'collection');
 
 exports.deleteProductCollection = refactory.deleteOne(ProductCollection, 'collection');
@@ -30,6 +47,25 @@ exports.createProduct = refactory.createOneForStore(Product, 'product');
 
 exports.getAllProducts = refactory.getAll(Product, 'products', {});
 exports.getOneProduct = refactory.getOne(Product, 'product');
+
+
+exports.getMyProducts = asyncWrapper(async function(req, res) {
+    const id = req.user._id;
+
+    const store = await Store.findOne({ owner: id });
+    if(!store) return res.json({ message: 'You don\'t have a store yet!' });
+
+    const products = await Product.find({ store: store._id });
+    if(!products || products.length < 1) return res.json({ message: "No product yet!" });
+
+    res.status(200).json({
+        status: 'success',
+        data: { products }
+    });
+
+});
+
+
 
 exports.uploadProductImages = asyncWrapper(async function(req, res) {
     const { id } = req.params;
@@ -51,7 +87,7 @@ exports.uploadProductImages = asyncWrapper(async function(req, res) {
                 .jpeg({ quality: 80 })
                 .toFile(`public/assets/products/${filename}`)
             ;
-            images.push(filename);
+            images.push(`/assets/products/${filename}`);
         }
     }
 

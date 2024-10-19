@@ -19,6 +19,7 @@ const router = express.Router();
 // GET COLLECTION / COLLECTIONS
 router.get('/all', productController.getAllProductCollections);
 router.get('/product', productController.getProductInCollection);
+router.get('/mine/all', isAuthProtected, productController.getMyProductCollections);
 
 
 // CREATE COLLECTION, EDIT/UPDATE AND DELETE

@@ -17,7 +17,8 @@ exports.createDeliveryRate = asyncWrapper(async function(req, res) {
     if(AlreadySeen) return res.json({ message: "Rate Already Exist" });
 
     const newDeliveryRate = await DeliveryRate.create({ ...req.body, store: store._id });
-    if((await DeliveryRate.findOne({ store: store._id })).length > 0) {
+    const allRates = await DeliveryRate.find({ store: store._id });
+    if(allRates.length >= 1) {
         store.storeOnboard.hasDeliveryRate = true;
         await store.save({});
     }

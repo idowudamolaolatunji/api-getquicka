@@ -16,6 +16,9 @@ const isRestrictedToAdmins = isRestricted(["admin", "moderator"])
 //// CREATING AND CONFIGURING ROUTES ////
 //////////////////////////////////////////////
 
+// come back here tho to add to extra backend logic
+router.patch('/add-payment-details/:id', isAuthProtected, storeController.updatePaymentInfo)
+
 // GET STORE CATEGORIES, AND STORES IN CERTAIN CATEGORY
 router.get('/category', storeController.getStoreCategories);
 router.get('/category/:id', storeController.getStoresInCategory);

@@ -2,6 +2,7 @@ const Category = require('../models/categoryModel');
 const Store = require('../models/storeModel');
 const refactory = require('../controllers/handleRefactory');
 const { asyncWrapper } = require('../utils/handlers');
+const BankDetail = require('../models/bankDetailModel');
 
 
 //////////////////////////////////////////////
@@ -13,6 +14,15 @@ exports.uploadCategoryImage = refactory.uploadOneImage(Category, 'category')
 exports.getStoreCategories = refactory.getAll(Category, 'categories', { limitTO: 100, sortBy: {createdAt: 1} });
 exports.updateCategory = refactory.updateOne(Category, 'category');
 exports.deleteCategory = refactory.deleteOne(Category, 'category');
+
+
+
+//////////////////////////////////////////////
+//// STORE BANK DETAIL  ////
+//////////////////////////////////////////////
+exports.updatePaymentInfo = refactory.updateOne(BankDetail, 'payment info');
+// exports.getAllUserPaymentInfo = refactory.getAll(BankDetail, '', {});
+
 
 
 //////////////////////////////////////////////
