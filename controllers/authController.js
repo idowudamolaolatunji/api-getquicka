@@ -1,4 +1,5 @@
 const otpEmail = require('../emails/templates/otpEmail');
+const passwordResetEmail = require('../emails/templates/passwordResetEmail');
 const welcomeEmail = require('../emails/templates/welcomeEmail');
 const BankDetail = require('../models/bankDetailModel');
 const Store = require('../models/storeModel');
@@ -284,12 +285,11 @@ exports.forgotPassword = asyncWrapper(async function (req, res) {
 
 
     // SEND EMAIL TO USER
-    // const resetURL = `https://www.passpro.com/reset-password/${resetToken}`;
     const resetEmail = passwordResetEmail(resetToken);
 
     await sendEmail({
         email: user.email,
-        subject: 'Quicka Password Reset Token (valid for 10 min)',
+        subject: 'Quicka Password Reset (valid for 10 min)',
         message: resetEmail
     });
 
@@ -297,7 +297,7 @@ exports.forgotPassword = asyncWrapper(async function (req, res) {
         status: "success",
         message: "Reset password request sent!",
         data: { user }
-        });
+    });
 })
 
 

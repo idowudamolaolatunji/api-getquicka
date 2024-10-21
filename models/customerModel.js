@@ -9,13 +9,21 @@ const customerSchema = new mongoose.Schema({
         ref: 'Store',
         required: true
     },
-    fullname: {
-        type: String,
-        required: true,
+    firstname: { type: String, required: true },
+    lastname: { type: String, required: true },
+    contact: {
+        countryCode: String,
+        dialCode: String,
+        phoneNumber: String,
+        phone: String,
+        email: String,
     },
-    email: {
-        type: String,
-        required: true,
+    shippingAddress: {
+        address: String,
+        country: String,
+        state: String,
+        city: String,
+        zipCode: String,
     },
     createdAt: {
         type: Date,
@@ -24,18 +32,6 @@ const customerSchema = new mongoose.Schema({
 });
 
 
-//////////////////////////////////////////////
-//// SCHEMA MIDDLEWARES ////
-//////////////////////////////////////////////
-
-customerSchema.pre(/^find/, function(next) {
-    this.populate({
-        path: 'store',
-        select: '_id'
-    });
-
-    next();
-})
 
 //////////////////////////////////////////////
 //// MODEL AND COLLECTION ////
