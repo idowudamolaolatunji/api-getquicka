@@ -75,6 +75,10 @@ const storeSchema = new mongoose.Schema(
 			type: Boolean,
 			default: false,
 		},
+		csvConvertions: {
+			type: Number,
+			default: 3
+		},
 		storeCredits: {
 			type: Number,
 			default: 50,
