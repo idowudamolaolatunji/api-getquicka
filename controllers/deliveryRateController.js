@@ -7,18 +7,19 @@ const refactory = require('./handleRefactory');
 //////////////////////////////////////////////
 //// SHIPPING METHOD LOGIC  ////
 //////////////////////////////////////////////
+
+// CREATE STORE DELIVERY RATE
 exports.createDeliveryRate = asyncWrapper(async function(req, res) {
-    
     const owner = await User.findById(req.user._id);
     const store = await Store.findOne({ owner: owner._id });
     if(!store) return res.json({ message: 'You don\'t have a store yet!' });
 
     const AlreadySeen = await DeliveryRate.findOne({ title: req.body.title });
-    if(AlreadySeen) return res.json({ message: "Rate Already Exist" });
+    if(AlreadySeen) return res.json({ message: "Rate or Rate Title Already Exist" });
 
-    const newDeliveryRate = await DeliveryRate.create({ ...req.body, store: store._id });
+    const deliveryRate = await DeliveryRate.create({ ...req.body, store: store._id });
     const allRates = await DeliveryRate.find({ store: store._id });
-    if(allRates.length >= 1) {
+    if(allRates.length > 0) {
         store.storeOnboard.hasDeliveryRate = true;
         await store.save({});
     }
@@ -26,13 +27,15 @@ exports.createDeliveryRate = asyncWrapper(async function(req, res) {
     res.status(201).json({
         status: 'success',
         message: 'Delivery rate created!',
-        data: { deliveryRate: newDeliveryRate },
+        data: { deliveryRate },
         useful: { data: { owner, store } }
     });
 });
 
+// ADMINS GET ALL DELIVERY RATES
+exports.getAllDeliveryRates = refactory.getAll(DeliveryRate, 'deliveryRates');
 
-exports.getAllDeliveryRates = refactory.getAll(DeliveryRate, 'deliveryRates', {});
+// ADMINS AND USERS, GET ONE DELIVERY RATE BY ID
 exports.getOneDeliveryRate = refactory.getOne(DeliveryRate, 'deliveryRate');
 
 
@@ -51,5 +54,11 @@ exports.getDeliveryRatesByStoreId = asyncWrapper(async function(req, res) {
 });
 
 
+// UPDATE DELIVERY RATE
 exports.updateDeliveryRate = refactory.updateOne(DeliveryRate, 'rates');
+
+// DELETE DELIVERY RATE
 exports.deleteDeliveryRate = refactory.deleteOne(DeliveryRate, 'rates');
+
+// DELETE MANY DELIVERY RATES
+exports.deleteManyRates = refactory.deleteManyForStore(DeliveryRate, 'rates');

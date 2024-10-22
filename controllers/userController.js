@@ -1,14 +1,23 @@
 const User = require("../models/userModel");
-const Store = require('../models/storeModel');
 const refactory = require('../controllers/handleRefactory');
 const { asyncWrapper } = require('../utils/handlers');
 const { filterObj } = require("../utils/helpers");
 
 
-exports.getEveryUsers = refactory.getAll(User, 'users', { limitTO: 100 });
+// ADMIN GET ALL USERS
+exports.getEveryUsers = refactory.getAll(User, 'users');
+
+// ADMIN GET USER BY ID
 exports.getUserById = refactory.getOne(User, 'user');
 
+// ADMIN UPDATE USER BY ID
+exports.updateUser = refactory.updateOne(User, 'user');
 
+// ADMIN DELETE USER BY ID
+exports.deleteUser = refactory.deleteOne(User, 'user');
+
+
+// USER UPDATE AVATAR / PROFILE IMAGE (AUTHORISED)
 exports.uploadProfileAvatar = asyncWrapper(async function (req, res) {
     const id = req.user._id;
     let avatar;
@@ -25,10 +34,7 @@ exports.uploadProfileAvatar = asyncWrapper(async function (req, res) {
     });
 });
 
-exports.updateUser = refactory.updateOne(User, 'user');
-exports.deleteUser = refactory.deleteOne(User, 'user');
-
-
+// USER DELETE USER ACCOUNT (AUTHORISED)
 exports.deleteAccount = asyncWrapper(async function(req, res) {
     const { password } = req.body;
     const user = await User.findById(req.user._id).select('+password');
@@ -48,7 +54,7 @@ exports.deleteAccount = asyncWrapper(async function(req, res) {
     });
 })
   
-
+// USER UPDATES PROFILE (AUTHORISED)
 exports.updateMe = asyncWrapper(async function (req, res) {
     const { password, passwordConfirm} = req.body;
 
@@ -60,7 +66,8 @@ exports.updateMe = asyncWrapper(async function (req, res) {
     }
     
     // FILTER WHAT CAN BE EDITED
-    const filteredBody = filterObj(req.body, "email", "firstname", "lastname", "country", "phoneNumber", "state");
+    const filterArray = ["email", "firstname", "lastname", "country", "phoneNumber", "state"]
+    const filteredBody = filterObj(req.body, ...filterArray);
     const user = await User.findByIdAndUpdate(req.user._id, filteredBody, {
         new: true,
         runValidators: true

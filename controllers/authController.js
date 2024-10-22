@@ -42,7 +42,7 @@ exports.signupUser = asyncWrapper(async function(req, res) {
             email,
         },
         location: { country }
-    })
+    });
 
     // SEND BACK A RESPONSE 
     res.status(201).json({
@@ -86,9 +86,6 @@ exports.onBoardStoreAfterSignup = asyncWrapper(async function(req, res) {
     user.storeBasicSetup = true;
     await user.save({ validateModifiedOnly: true });
 
-    // create details for payment
-    const bankInfo = await BankDetail.create({ store: store._id });
-
     // SIGN USER TOKEN
     const token = signToken(user._id);
 
@@ -99,15 +96,15 @@ exports.onBoardStoreAfterSignup = asyncWrapper(async function(req, res) {
         token
     });
 
-    // // CREATE EMAIL MESSAGE
+    // CREATE EMAIL MESSAGE
     const emailOtpVerifiedMessage = welcomeEmail(user);
 
     // SEND WELCOME MESSAGE
-    // await sendEmail({
-    //     email: user.email,
-    //     subject: 'Welcome to quicka',
-    //     message: emailOtpVerifiedMessage,
-    // });
+    await sendEmail({
+        email: user.email,
+        subject: 'Welcome to quicka',
+        message: emailOtpVerifiedMessage,
+    });
 });
 
 
@@ -132,10 +129,8 @@ exports.loginUser = asyncWrapper(async function (req, res) {
         })
         
         return res.json({
-            data: {
-                user: { name: user.firstname, email: user.email },
-            },
-            message: 'Account not verified. An email has been sent!'
+            message: 'Account not verified. An email has been sent!',
+            data: { user: { name: user.firstname, email: user.email } },
         })
     }
         
@@ -148,7 +143,6 @@ exports.loginUser = asyncWrapper(async function (req, res) {
 
     // GET THE USER'S STORE
     const store = await Store.findOne({ owner: user._id });
-    const bankInfo = await BankDetail.findOne({ store: store._id });
     if(!store) {
         user.isActive = false;
         await user.save({ validateModifiedOnly: true });
@@ -159,7 +153,7 @@ exports.loginUser = asyncWrapper(async function (req, res) {
     res.status(200).json({
         status: 'success',
         message: 'Login successful!',
-        data: { user, store, bankInfo },
+        data: { user, store },
         token
     });
 });
@@ -265,7 +259,6 @@ exports.updatePassword = asyncWrapper(async function (req, res) {
 
 
 exports.logoutUser = function(req, res) {
-    res.clearCookie('jwt')
     res.status(200).json({ status: 'success' });
 };
 

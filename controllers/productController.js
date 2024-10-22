@@ -3,74 +3,53 @@ const Product = require('../models/productModel');
 const ProductCollection = require('../models/productCollectionModel');
 const refactory = require('../controllers/handleRefactory');
 const { asyncWrapper } = require('../utils/handlers');
-const { capitalizeFirstLetter } = require('../utils/helpers');
 const sharp = require('sharp');
 
 
 //////////////////////////////////////////////
 //// PRODUCT CATEGORY LOGIC  ////
 //////////////////////////////////////////////
-exports.createProductCollection = refactory.createOneForStore(ProductCollection, 'collection')
-exports.uploadProductCollectionImage = refactory.uploadOneImage(ProductCollection, 'collection');
 
-exports.getAllProductCollections = refactory.getAll(ProductCollection, 'collections', {
-    limitTO: 50, sortBy: {name: -1}
-});
+// CREATE PRODUCT COLLECTION BY THE STORE OWNER (PROTECTED)
+exports.createProductCollection = refactory.createOneForStore(ProductCollection, "collection")
 
+// UPLOAD COLLECTION IMAGE (PROTECTED)
+exports.uploadProductCollectionImage = refactory.uploadOneImage(ProductCollection, "collection");
 
-exports.getMyProductCollections = asyncWrapper(async function(req, res) {
-    const id = req.user._id;
+// GET ALL PRODUCTCOLLECTION BY THE STORE OWNER (PROTECTED)
+exports.getMyProductCollections = refactory.getItemsByStoreOwner(ProductCollection, "collection")
 
-    const store = await Store.findOne({ owner: id });
-    if(!store) return res.json({ message: 'You don\'t have a store yet!' });
+// UPDATE COLLECTION (PROTECTED)
+exports.updateProductCollection = refactory.updateOne(ProductCollection, "collection");
 
-    const collections = await ProductCollection.find({ store: store._id });
-    if(!collections || collections.length < 1) return res.json({ message: "No collections yet!" });
+// DELETE COLLECTION (PROTECTED)
+exports.deleteProductCollection = refactory.deleteOne(ProductCollection, "collection");
 
-    res.status(200).json({
-        status: 'success',
-        data: { collections }
-    });
-
-});
-
-exports.updateProductCollection = refactory.updateOne(ProductCollection, 'collection');
-
-exports.deleteProductCollection = refactory.deleteOne(ProductCollection, 'collection');
+// DELETE COLLECTION (PROTECTED)
+exports.deleteManyProductCollections = refactory.deleteManyForStore(ProductCollection, "collections");
 
 
 
 //////////////////////////////////////////////
 //// PRODUCT LOGIC  ////
 //////////////////////////////////////////////
+
+// CREAYE NEW PRODUCT BY STORE OWNER (PROTECTED)
 exports.createProduct = refactory.createOneForStore(Product, 'product');
 
-exports.getAllProducts = refactory.getAll(Product, 'products', {});
+// ADMINS GET ALL PRODUCT (PROTECTED)
+exports.getAllProducts = refactory.getAll(Product, 'products');
+
+// GET ONE PRODUCT BY ID
 exports.getOneProduct = refactory.getOne(Product, 'product');
 
+// GET ALL PRODUCTS BY STORE OWNER (PROTECTED)
+exports.getMyProducts = refactory.getItemsByStoreOwner();
 
-exports.getMyProducts = asyncWrapper(async function(req, res) {
-    const id = req.user._id;
-
-    const store = await Store.findOne({ owner: id });
-    if(!store) return res.json({ message: 'You don\'t have a store yet!' });
-
-    const products = await Product.find({ store: store._id });
-    if(!products || products.length < 1) return res.json({ message: "No product yet!" });
-
-    res.status(200).json({
-        status: 'success',
-        data: { products }
-    });
-
-});
-
-
-
+// UPLOAD MULTITLE PRODUCT IMAGES BY STORE OWNER (PROTECTED)
 exports.uploadProductImages = asyncWrapper(async function(req, res) {
     const { id } = req.params;
     const reqFiles = req.files;
-    console.log(req.files)
     
     const product = await Product.findById(id);
     if(!product) return res.json({ message: 'Product not found!' });
@@ -100,29 +79,25 @@ exports.uploadProductImages = asyncWrapper(async function(req, res) {
     });
 });
 
-exports.getProductByProductId = asyncWrapper(async function(req, res) {
-    const { productId } = req.params;
+// UPDATE PRODUCT BY ID (PROTECTED)
+exports.updateProduct = refactory.updateOne(Product, 'product');
 
-    const product = await Product.findOne({ productId });
-    if(!product || product.stockAmount < 1) return res.json({
-        message: 'Product sold out complete;ly!'
-    });
+// DELETE PRODUCT BY ID (PROTECTED)
+exports.deleteProduct = refactory.deleteOne(Product, 'product');
 
-    res.status(200).json({
-        status: 'success',
-        data: { product }
-    });
-});
+// DELETE MANY PRODUCT (PROTECTED)
+exports.deleteManyProducts = refactory.deleteManyForStore(Product, 'products');
 
+// GET PRODUCT BY COLLECTION SLUG
 exports.getProductInCollection = asyncWrapper(async function(req, res) {
-    const { id } = req.params;
+    const { slug } = req.params;
 
-    const collection = await ProductCollection.findById(id);
-    if(!collection) return res.json({ message: 'No collection by this ID' });
+    const collection = await ProductCollection.findOne({ slug });
+    if(!collection) return res.json({ message: 'No collection found by this Id!' });
 
     const products = await Product.find({ collection: collection.name });
     if(!products || products.length < 1) return res.json({
-        message: 'No product in this collection' 
+        message: 'No product in this collection'
     });
 
     res.status(200).json({
@@ -130,6 +105,3 @@ exports.getProductInCollection = asyncWrapper(async function(req, res) {
         data: { products }
     });
 });
-
-exports.updateProduct = refactory.updateOne(Product, 'product');
-exports.deleteProduct = refactory.deleteOne(Product, 'product');

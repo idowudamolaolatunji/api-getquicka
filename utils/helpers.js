@@ -3,6 +3,7 @@ const jwt = require("jsonwebtoken");
 
 const verifyPayment = require("./verifyPayment");
 
+// VERIFICATION RESPONSE
 exports.getResponsedata = async function(reference, charges) {
     const paymentVerification = await verifyPayment(reference);
     const response = paymentVerification.data.data;
@@ -13,11 +14,12 @@ exports.getResponsedata = async function(reference, charges) {
     return { amount, status, paidAt };
 }
 
+// FORMAT NUMBER
 exports.formatNumber = function(amount) {
 	return Number(amount).toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
 
-
+// FORMAT DATE
 exports.formatDate = function(givenDate) {
 	const currentDate = moment().startOf("day");
 	const inputDate = moment(givenDate);
@@ -45,19 +47,19 @@ exports.formatDate = function(givenDate) {
 	}
 }
 
+// FORMAT DATE, BUT FOR LATER FORMAT
 exports.formatDateLater = function(givenDate) {
     const date = moment(givenDate);
     return date.format('MMMM D, YYYY');
 }
 
-
+// GENERATE 4-DIGIT RANDOM OTP CODE
 exports.generateOtp = function() {
 	const otp = Math.floor(1000 + Math.random() * 9000);
-	console.log(otp);
 	return otp
 };
 
-
+// SIGN JWT ACCESS TOKEN
 exports.signToken = function(id) {
 	const token = jwt.sign({ id }, process.env.JWT_SECRET_TOKEN, {
 		expiresIn: process.env.JWT_EXPIRES_IN,
@@ -65,11 +67,12 @@ exports.signToken = function(id) {
 	return token
 }
 
+// CAPITALIZE FIRST LETTER
 exports.capitalizeFirstLetter = function(string) {
     return string.slice(0, 1).toUpperCase() + string.slice(1);
 }
 
-
+// FILTER ACCEPTABLE OBJECT
 exports.filterObj = function(obj, ...allowedFields) {
 	const newObj = {};
 	Object.keys(obj).forEach(el => {

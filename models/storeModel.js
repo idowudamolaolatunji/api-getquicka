@@ -6,95 +6,92 @@ const User = require("./userModel");
 //////////////////////////////////////////////
 //// SCHEMA CONFIGURATION  ////
 //////////////////////////////////////////////
-const storeSchema = new mongoose.Schema(
-	{
-		owner: {
-			type: mongoose.Schema.Types.ObjectId,
-			ref: "User",
-			required: true,
-			unique: true,
-		},
-		template: {
-			type: mongoose.Schema.Types.ObjectId,
-			ref: "Template",
-		},
-		customDesign: {
-			spinner: String,
-			introBanner: String,
-			primaryColor: String,
-			secondaryColor: String,
-			greyColor: String,
-		},
-		name: {
-			type: String,
-			lowercase: true,
-		},
-		logo: {
-			type: String,
-			default: null
-		},
-		title: String,
-		subTitle: String,
-		description: String,
-		slug: String,
-		storeUrl: String,
-		isRegistered: String,
-		regType: String,
-		domain: String,
-		previousUrl: String,
-		currency: [String],
-		contact: {
-			countryCode: String,
-			dialCode: String,
-			phoneNumber: String,
-			phone: String,
-			email: String,
-		},
-		location: {
-			city: String,
-			country: String,
-			state: String,
-			address: {
-				type: String,
-				default: null,
-			},
-			zip: {
-				type: String,
-				default: null,
-			},
-		},
-		category: String,
-		storeOnboard: {
-			hasCustomisedStore: { type: Boolean, default: false },
-			hasFirstProduct: { type: Boolean, default: false },
-			hasDeliveryRate: { type: Boolean, default: false },
-			hasBankDetails: { type: Boolean, default: false },
-		},
-		reasonAndGoalOptions: [String],
-		isPremium: {
-			type: Boolean,
-			default: false,
-		},
-		csvConvertions: {
-			type: Number,
-			default: 3
-		},
-		storeCredits: {
-			type: Number,
-			default: 50,
-		},
-		maintenanceMode: {
-			type: Boolean,
-			default: true,
-		},
-		maintenanceMessage: { type: String, default: "We are not available right now" },
-		settings: {},
-		// MORE TO COME...
+const storeSchema = new mongoose.Schema({
+	owner: {
+		type: mongoose.Schema.Types.ObjectId,
+		ref: "User",
+		required: true,
+		unique: true,
 	},
-	{
-		timeStamps: true,
+	template: {
+		type: mongoose.Schema.Types.ObjectId,
+		ref: "Template",
 	},
-);
+	customDesign: {
+		spinner: String,
+		introBanner: String,
+		primaryColor: String,
+		secondaryColor: String,
+		greyColor: String,
+	},
+	name: {
+		type: String,
+		lowercase: true,
+	},
+	logo: {
+		type: String,
+		default: null
+	},
+	title: String,
+	subTitle: String,
+	description: String,
+	slug: String,
+	storeUrl: String,
+	isRegistered: String,
+	regType: String,
+	domain: String,
+	previousUrl: String,
+	currency: [String],
+	contact: {
+		countryCode: String,
+		dialCode: String,
+		phoneNumber: String,
+		phone: String,
+		email: String,
+	},
+	location: {
+		city: String,
+		country: String,
+		state: String,
+		address: {
+			type: String,
+			default: null,
+		},
+		zip: {
+			type: String,
+			default: null,
+		},
+	},
+	category: String,
+	storeOnboard: {
+		hasCustomisedStore: { type: Boolean, default: false },
+		hasFirstProduct: { type: Boolean, default: false },
+		hasDeliveryRate: { type: Boolean, default: false },
+		hasBankDetails: { type: Boolean, default: false },
+	},
+	reasonAndGoalOptions: [String],
+	isPremium: {
+		type: Boolean,
+		default: false,
+	},
+	csvConvertions: {
+		type: Number,
+		default: 3
+	},
+	storeCredits: {
+		type: Number,
+		default: 50,
+	},
+	maintenanceMode: {
+		type: Boolean,
+		default: true,
+	},
+	maintenanceMessage: { type: String, default: "We are not available right now" },
+	settings: {},
+	// MORE TO COME...
+},{
+	timeStamps: true,
+});
 
 //////////////////////////////////////////////
 //// SCHEMA MIDDLEWARES ////

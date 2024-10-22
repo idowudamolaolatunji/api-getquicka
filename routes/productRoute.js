@@ -21,10 +21,9 @@ router.patch('/:id', isAuthProtected, productController.updateProduct);
 router.delete('/:id', isAuthProtected, productController.deleteProduct);
 
 // GET PRODUCT / PRODUCTS
-router.get('/all', productController.getAllProducts);
-router.get('/mine/all', isAuthProtected, productController.getMyProducts);
-router.get('/one/:id', productController.getOneProduct);
-router.get('/one/id/:productId', productController.getProductByProductId);
+router.get('/', productController.getAllProducts);
+router.get('/mine/products', isAuthProtected, productController.getMyProducts);
+router.get('/:id', productController.getOneProduct);
 
 
 //////////////////////////////////////////////

@@ -4,6 +4,11 @@ const mongoose = require('mongoose');
 //// SCHEMA CONFIGURATION  ////
 //////////////////////////////////////////////
 const orderSchema = new mongoose.Schema({
+    store: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Store',
+        required: true
+    },
     product: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Product',
@@ -13,16 +18,17 @@ const orderSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Customer',
     },
-    title: {
-        type: String,
-        required: true
+    delivery: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'DeliveryRate',
     },
+    title: String,
     channel: {
         type: String,
         required: true
     },
     description: String,
-    paymentType: {
+    paymentStatus: {
         type: String,
         enum: ["paid", "partially", "unpaid"],
         required: true
