@@ -7,9 +7,12 @@ const cookieParser = require('cookie-parser');
 const app = express();
 const userRouter = require('./routes/userRoute');
 const storeRouter = require('./routes/storeRoute');
+const orderRouter = require('./routes/orderRoute');
 const productRouter = require('./routes/productRoute');
-const productCollectionRouter = require('./routes/productCollectionRoute');
+const customerRouter = require('./routes/customerRoute');
+const transactionRouter = require('./routes/transactionRoute');
 const deliveryRateRouter = require('./routes/deliveryRateRoute');
+const productCollectionRouter = require('./routes/productCollectionRoute');
 
 //////////////////////////////////////////////
 //// MIDDLEWARES ////
@@ -59,9 +62,13 @@ app.get('/', function(_, res) {
 //////////////////////////////////////////////
 app.use('/api/users', userRouter);
 app.use('/api/stores', storeRouter);
+app.use('/api/orders', orderRouter);
 app.use('/api/products', productRouter);
-app.use('/api/collections', productCollectionRouter);
+app.use('/api/customers', customerRouter);
+app.use('/api/transactions', transactionRouter);
 app.use('/api/delivery-rates', deliveryRateRouter);
+app.use('/api/collections', productCollectionRouter);
+
 
 
 module.exports = app;

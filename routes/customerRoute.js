@@ -1,7 +1,7 @@
 //////////////////////////////////////////////////
 //////////////////////////////////////////////////
 const express = require('express');
-const orderController = require('../controllers/orderController');
+const customerController = require('../controllers/customerController');
 const { isAuthProtected, isRestricted } = require('../middlewares/protected');
 
 //////////////////////////////////////////////////
@@ -12,17 +12,15 @@ const router = express.Router();
 //// CREATING AND CONFIGURING ROUTES ////
 //////////////////////////////////////////////
 
+router.post("/", isAuthProtected, customerController.createCustomer);
+router.get("/mine/customers", isAuthProtected, customerController.getMyCustomers);
 
-router.post("/record", isAuthProtected, orderController.recordOrder);
-router.get("/mine/orders", isAuthProtected, orderController.getMyOrders);
-router.get("/:id", isAuthProtected, orderController.getOneOrderById);
-router.patch("/:id", isAuthProtected, orderController.updateOrderById);
-router.delete("/:id", isAuthProtected, orderController.deleteOrderById);
-
-router.delete("/delete-many", isAuthProtected, orderController.deleteManyOrders);
+router.get("/:id", isAuthProtected, customerController.getOneCustomerById);
+router.patch("/:id", isAuthProtected, customerController.updateCustomerById);
+router.delete("/:id", isAuthProtected, customerController.deleteCustomerById);
 
 
-
+router.delete("/delete-many", isAuthProtected, customerController.deleteManyCustomers);
 
 //////////////////////////////////////////////
 //// EXPORT ROUTER ////

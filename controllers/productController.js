@@ -17,7 +17,7 @@ exports.createProductCollection = refactory.createOneForStore(ProductCollection,
 exports.uploadProductCollectionImage = refactory.uploadOneImage(ProductCollection, "collection");
 
 // GET ALL PRODUCTCOLLECTION BY THE STORE OWNER (PROTECTED)
-exports.getMyProductCollections = refactory.getItemsByStoreOwner(ProductCollection, "collection")
+exports.getMyProductCollections = refactory.getItemsByStoreOwner(ProductCollection, "collections")
 
 // UPDATE COLLECTION (PROTECTED)
 exports.updateProductCollection = refactory.updateOne(ProductCollection, "collection");
@@ -44,7 +44,7 @@ exports.getAllProducts = refactory.getAll(Product, 'products');
 exports.getOneProduct = refactory.getOne(Product, 'product');
 
 // GET ALL PRODUCTS BY STORE OWNER (PROTECTED)
-exports.getMyProducts = refactory.getItemsByStoreOwner();
+exports.getMyProducts = refactory.getItemsByStoreOwner(Product, 'products');
 
 // UPLOAD MULTITLE PRODUCT IMAGES BY STORE OWNER (PROTECTED)
 exports.uploadProductImages = asyncWrapper(async function(req, res) {

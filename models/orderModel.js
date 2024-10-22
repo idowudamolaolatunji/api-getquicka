@@ -1,4 +1,8 @@
 const mongoose = require('mongoose');
+const { customAlphabet } = require('nanoid');
+// const nanoid = customAlphabet('1234567890abcdef', 10)
+const nanoid = customAlphabet('1234567890', 10)
+
 
 //////////////////////////////////////////////
 //// SCHEMA CONFIGURATION  ////
@@ -23,6 +27,7 @@ const orderSchema = new mongoose.Schema({
         ref: 'DeliveryRate',
     },
     title: String,
+    orderId: String,
     channel: {
         type: String,
         required: true
@@ -56,7 +61,7 @@ const orderSchema = new mongoose.Schema({
 orderSchema.pre(/^find/, function (next) {
 	this.populate({
 		path: "product",
-		select: "_id name productId images price discountType stockAmount",
+		select: "_id name images price discountType stockAmount",
 	});
 
 	this.populate({
@@ -65,6 +70,15 @@ orderSchema.pre(/^find/, function (next) {
 	});
 
 	next();
+});
+
+
+
+orderSchema.pre('save', function(next) {
+    if(this.isNew) {
+        this.orderId = "#" + nanoid(5);
+    }
+    next();
 });
 
 

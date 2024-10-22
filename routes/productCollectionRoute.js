@@ -27,6 +27,7 @@ router.post('/upload-image/:id', isAuthProtected, uploadSingleImage, resizeSingl
 router.patch('/:id', isAuthProtected, productController.updateProductCollection);
 router.delete('/:id', isAuthProtected, productController.deleteProductCollection);
 
+router.delete("/delete-many", isAuthProtected, productController.deleteManyProductCollections);
 
 //////////////////////////////////////////////
 //// EXPORT ROUTER ////

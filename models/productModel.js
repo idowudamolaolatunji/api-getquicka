@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const { nanoid } = require('nanoid');
 
 //////////////////////////////////////////////
 //// SCHEMA CONFIGURATION  ////
@@ -15,7 +14,6 @@ const productSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    productId: String,
     images: [String],
     shortDescription: String,
     description: String,
@@ -67,12 +65,6 @@ const productSchema = new mongoose.Schema({
 //////////////////////////////////////////////
 //// SCHEMA MIDDLEWARES ////
 //////////////////////////////////////////////
-productSchema.pre('save', function(next) {
-    if(this.isNew) {
-        this.productId = nanoid();
-    }
-    next();
-});
 
 
 productSchema.pre(/^find/, function(next) {

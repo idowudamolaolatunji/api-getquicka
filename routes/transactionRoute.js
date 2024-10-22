@@ -1,7 +1,7 @@
 //////////////////////////////////////////////////
 //////////////////////////////////////////////////
 const express = require('express');
-const orderController = require('../controllers/orderController');
+const transactionController = require('../controllers/transactionController');
 const { isAuthProtected, isRestricted } = require('../middlewares/protected');
 
 //////////////////////////////////////////////////
@@ -13,14 +13,12 @@ const router = express.Router();
 //////////////////////////////////////////////
 
 
-router.post("/record", isAuthProtected, orderController.recordOrder);
-router.get("/mine/orders", isAuthProtected, orderController.getMyOrders);
-router.get("/:id", isAuthProtected, orderController.getOneOrderById);
-router.patch("/:id", isAuthProtected, orderController.updateOrderById);
-router.delete("/:id", isAuthProtected, orderController.deleteOrderById);
+router.get("/mine/transactions", isAuthProtected, transactionController.getMyTransactions);
+router.get("/:id", isAuthProtected, transactionController.getOneTransactionById);
+router.patch("/:id", isAuthProtected, transactionController.updateTransactionById);
+router.delete("/:id", isAuthProtected, transactionController.deleteTransactionById);
 
-router.delete("/delete-many", isAuthProtected, orderController.deleteManyOrders);
-
+router.delete("/delete-many", isAuthProtected, transactionController.deleteManyTransactions);
 
 
 

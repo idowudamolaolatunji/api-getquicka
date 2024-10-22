@@ -25,6 +25,8 @@ router.get('/', productController.getAllProducts);
 router.get('/mine/products', isAuthProtected, productController.getMyProducts);
 router.get('/:id', productController.getOneProduct);
 
+router.delete("/delete-many", isAuthProtected, productController.deleteManyProducts);
+
 
 //////////////////////////////////////////////
 //// EXPORT ROUTER ////
