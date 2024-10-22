@@ -105,3 +105,19 @@ exports.getProductInCollection = asyncWrapper(async function(req, res) {
         data: { products }
     });
 });
+
+
+// GET PRODUCT BY NANOID-PRODUCT ID
+exports.getProductBySlugId = asyncWrapper(async function(req, res) {
+    const { productId } = req.params;
+
+    const product = Product.findOne({ productId });
+    if(!product) return res.json({
+        messgae: "No product by this Id",
+    });
+
+    res.status(200).json({
+        status: "success",
+        data: { product }
+    })
+})

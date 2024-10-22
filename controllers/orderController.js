@@ -21,7 +21,7 @@ exports.recordOrder = asyncWrapper(async function(req, res) {
     const order = await Order.create({ ...req.body, store: store._id });
     const transaction = await Transaction.create({ 
         ...req.body, store: store._id, order: order._id,
-        status: order.paymentStatus != "unpaid" ? "pending" : "success",
+        status: order.paymentStatus != "unpaid" ? "success" : "pending",
     });
 
     res.status(201).json({

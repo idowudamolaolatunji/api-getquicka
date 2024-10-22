@@ -13,11 +13,11 @@ const orderSchema = new mongoose.Schema({
         ref: 'Store',
         required: true
     },
-    product: {
+    products: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Product',
         required: true
-    },
+    }],
     customer: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Customer',
@@ -26,8 +26,11 @@ const orderSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'DeliveryRate',
     },
-    title: String,
     orderId: String,
+    orderDate: {
+        type: Date,
+        required: true,
+    },
     channel: {
         type: String,
         required: true
@@ -60,7 +63,7 @@ const orderSchema = new mongoose.Schema({
 
 orderSchema.pre(/^find/, function (next) {
 	this.populate({
-		path: "product",
+		path: "products",
 		select: "_id name images price discountType stockAmount",
 	});
 

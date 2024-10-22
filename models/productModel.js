@@ -1,4 +1,6 @@
 const mongoose = require('mongoose');
+const slugify = require('slugify');
+const { nanoid } = require("nanoid");
 
 //////////////////////////////////////////////
 //// SCHEMA CONFIGURATION  ////
@@ -17,6 +19,8 @@ const productSchema = new mongoose.Schema({
     images: [String],
     shortDescription: String,
     description: String,
+    productId: String,
+    slug: String,
     price: {
         type: Number,
         required: true,
@@ -66,15 +70,21 @@ const productSchema = new mongoose.Schema({
 //// SCHEMA MIDDLEWARES ////
 //////////////////////////////////////////////
 
-
-productSchema.pre(/^find/, function(next) {
-    this.populate({
-        path: 'store',
-        select: '_id'
-    });
-
+productSchema.pre('save', function(next) {
+    if(this.isNew) {
+        this.productId = nanoid(10)
+    }
     next();
-})
+});
+
+productSchema.pre('save', function(next) {
+    if(this.isNew || this.isModified("name")) {
+        const slug = slugify(this.name, { replacement: "-", lower: true });
+        this.slug = slug;
+    }
+
+    next()
+});
 
 
 //////////////////////////////////////////////
