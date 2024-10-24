@@ -33,7 +33,7 @@ const orderSchema = new mongoose.Schema({
     },
     channel: {
         type: String,
-        required: true
+        default: "online store"
     },
     description: String,
     paymentStatus: {
@@ -51,6 +51,11 @@ const orderSchema = new mongoose.Schema({
         emum: ["in-transit", "pending", "delivered"],
         default: "pending"
     },
+    orderStatus: {
+        type: String,
+        emum: ["completed", "pending"],
+        default: "pending"
+    }
 
 }, {
     timeStamps: true

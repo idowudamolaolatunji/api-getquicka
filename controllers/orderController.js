@@ -18,7 +18,9 @@ exports.recordOrder = asyncWrapper(async function(req, res) {
     const store = await Store.findOne({ owner: storeOwnerId });
     if(!store) return res.json({ message: 'You don\'t have a store yet!' });
 
-    const order = await Order.create({ ...req.body, store: store._id });
+    const status = (req.body.paymentStatus == "unpaid" && req.body.deliveryStatus != "delivered" ) ? "pending" : "completed"
+
+    const order = await Order.create({ ...req.body, store: store._id, orderStatus: status });
     const transaction = await Transaction.create({ 
         ...req.body, store: store._id, order: order._id,
         status: order.paymentStatus != "unpaid" ? "success" : "pending",
