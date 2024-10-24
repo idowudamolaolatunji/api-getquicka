@@ -9,6 +9,7 @@ const {
     deleteDeliveryRate,
     deleteManyRates,
     getDeliveryRatesByStoreId,
+    getDeliveryRatesForStore,
 } = require('../controllers/deliveryRateController');
 const { isAuthProtected, isRestricted } = require('../middlewares/protected');
 
@@ -24,6 +25,9 @@ const router = express.Router();
 
 // CREATE DELIVERY RATE, EDIT/UPDATE AND DELETE
 router.post('/', isAuthProtected, createDeliveryRate);
+
+router.get("/mine/delivery-rates", isAuthProtected, getDeliveryRatesForStore)
+
 router.patch('/:id', isAuthProtected, updateDeliveryRate);
 router.delete('/:id', isAuthProtected, deleteDeliveryRate)
 router.delete("/delete-many", isAuthProtected, deleteManyRates);

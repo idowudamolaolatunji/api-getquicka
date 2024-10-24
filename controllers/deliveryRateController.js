@@ -54,11 +54,14 @@ exports.getDeliveryRatesByStoreId = asyncWrapper(async function(req, res) {
 });
 
 
-// UPDATE DELIVERY RATE
+// GET ALL STORE DELIVERY RATES BY STORE OWNER (PROTECTED)
+exports.getDeliveryRatesForStore = refactory.getItemsByStoreOwner(DeliveryRate, "rates")
+
+// UPDATE DELIVERY RATE BY STORE OWNER (PROTECTED)
 exports.updateDeliveryRate = refactory.updateOne(DeliveryRate, 'rates');
 
-// DELETE DELIVERY RATE
+// DELETE DELIVERY RATE BY STORE OWNER (PROTECTED)
 exports.deleteDeliveryRate = refactory.deleteOne(DeliveryRate, 'rates');
 
-// DELETE MANY DELIVERY RATES
+// DELETE MANY DELIVERY RATES BY STORE OWNER (PROTECTED)
 exports.deleteManyRates = refactory.deleteManyForStore(DeliveryRate, 'rates');
